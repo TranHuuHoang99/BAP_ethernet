@@ -1,0 +1,1152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--******************************************************************************************************************************************************
+Name:       MQB_W_Baseline ICC 
+Author:     M. Wenzel
+**********************************************************************************************************************************************************
+Changes:    2021-10-28  2.51 initiale Erstellung for cluster51
+Changes:    2022-01-18  2.52 removed some unused messages, OnlineFunction renamed
+Changes:    2022-02-08  2.53 removed some more unused messages, lsg RemoteService, Sunroof, IAA_PSO removed
+Changes:    2022-02-18  2.54 df major version corrected: nav, audio, tel; length corrected: Charisma/ProfileConfiguration, BatteryControl/ChargingProfiles, Charisma/ProfileConfiguration_Extended
+Changes:    2022-03-31  2.55 added IAA_PSO2 df52                                                                                                        
+Changes:    2022-04-30  2.56 update HUD to DF3.10, ExteriorLigth to DF5.12, PDC to DF4.13, Unitmaster to DF3.10, Charisma to DF3.15, SWA to DF35, BatteryControl to DF5.11,
+                             Telefon to DF52, Audio to DF52, Navigation to DF51, ENI to DF3.15, ClimateMaster to DF3.13, SDS to DF33, InfoSettings to DF32, TPA to DF32;
+                             added DisplayConfiguration with DF37                                                                                                       
+Changes:    2022-05-11  2.56.1 interface corrected for BAP_IAA_PSO2_ASG_01 & BAP_IAA_PSO2_FSG_01
+Changes:    2022-05-13  2.56.2 pdu size corrected for BAP_IAA_PSO2_FSG_01
+Changes:    2022-06-07  2.60 update EngineFunctions to DF32
+Changes:    2022-06-15  2.60.1 bugfix disable Caches for PlugAndCharge/RootCaCertContainers, PlugAndCharge/UnknownRootCaCert, PlugAndCharge/VehicleCertificates, PlugAndCharge/Contracts
+Changes:    2022-06-15  2.61 update sw version to v1.12.0; added second rx-interface for bc_mfa.totaldistance
+Changes:    2022-06-28  2.61.1 bugfix vps class 
+Changes:    2022-08-04  2.70 update pdc to df4.14, doorlocking to df4.16, navigation to df53, seatpneumatic to df35, efficiencaassist to df36, infosettings to df33, paco to df38, car2x to df33; added slcview with df30 
+Changes:    2022-09-15  2.80 low lovel retry removed; update doorlocking to df4.17, navigation to df54, iaapso2 to df53, paco to df39 
+Changes:    2022-09-28  2.80.1 length corrected for IAA_PSO2.IAA_VehicleUserList 
+Changes:    2022-10-10  2.90 update charisma to df5.16, pdc to df4.15, paco to df3.10 
+Changes:    2022-10-27  2.91 SOP1: remove temporarily OPS_FSG_03 and OPS_ASG_08, remove temporarily lsg slcview, size corrected LSG 14.StatusAll, LSG88.StatusAll, LSG128.StatusAll
+                             size corrected VPS::PSO_ImExport, FAS_Profiles::FAS_ProfileConfiguration
+Changes:    2023-01-16  2.92 SOP1: update TPA to df33; TrailerAssist to df36
+Changes:    2023-02-23  2.93 removed all remaining low level retries for arrays
+Changes:    2023-03-20  2.100 update plugandcharge to v1.03
+Changes:    2023-06-21  2.110 update climatezone to v7.12, pdc to df4.16, batterycontrol to df53, climatemaster to df3.15, iaa_pso to df54, paco to df3.11, enginefunctions to df33, tpa to df34, car2x to df34
+							  modified some doc versions (SOP1 - Matrix v14.08)
+Changes:    2023-06-28  2.120 added OPS_FSG_03 and OPS_ASG_08 (SOP2 - Matrix v14.09)
+Changes:    2023-06-28  2.121 renamed MatrixReadingLight_SpclPos; interTelegramTime corrected for lsg bc_mfa
+Changes:    2024-01-23  2.130 update climatezone to df3.13, acc to df3.14, parkheater to df4.10, interiorlight df5.12, pdc to df4.18, vps to df58, doorlocking to df4.20, brake to df39, audio to df54, paco to df3.12,
+                              eni to df3.16, PlugAndCharge DF30 to v1.04, eni2 to df3.16, iaa_pso2 to df55, added sunroof df32, rhp df31, slcview df31,
+                              interface corrected for BAP_SLCView_FSG_01, BAP_OPS_FSG_03, BAP_Sunroof_FSG_01, BAP_RushhourPilot_FSG_01, BAP_SLCView_ASG_01, BAP_OPS_ASG_08, BAP_Sunroof_ASG_01, BAP_RushhourPilot_ASG_01
+                              buffersize iaapso2.vehicleuserlist corrected; interTelegramTime for lsg bc_mfa Fct 0x01 GetAll changed from 50 to 100 (v2.122)
+Changes:    2024-02-01  2.140 update FC Seat to DF48, ClimateZone to DF7.17, ACC to DF3.15, ClimateMaster to DF3.17, VZA to DF48
+Changes:    2024-03-06  2.150 update IAA_PSO2 to DF56; interTelegramTime corrected; update RHP to DF32
+							  update SWA to DF36 (EEARCH-44377), VPS to DF5.10 (EEARCH-44899), AWV to DF48 (EEARCH-41939), ACC to DF3.16 (EEARCH-42508),
+							  added LDW_HCA2 DF48 (EEARCH-44340), BAP_Navigation_ASG_09 (EEARCH-44086),
+							  update Doorlocking to DF4.21 (EEARCH-42864), ExteriorLight to DF5.13 (EEARCH-44425), added DamageDetection DF30 (EEARCH-44006)
+							  updated PaCo to DF3.14 (EEARCH-44368), MKE to DF34 (EEARCH-44340), Charisma to DF5.17 (EEARCH-44086)
+							  update EngineFunctions to DF35 (EEARCH-44902), EfficiencyAssist to DF37 (EEARCH-44081), PlugAndCharge to DF30 v1.05 (EEARCH-41482)
+                              update ClimateZone2 also to DF7.15		
+Changes:    2024-03-06  2.151 reduce buffer size for SDS.ChatList to 2165; update Sunroof to DF34
+Changes:    2024-08-15  2.152 removed BAP_Navigation_ASG_09 (adaption to for 14.09)
+Changes:    2025-03-06  2.153 BAP_LDW2_FSG_01 and BAP_LDW2_ASG_01 changed to ETH; removed LSG DamageDetection; update ClimateZone and ClimateZone2 to DF7.16, ClimateMaster to Df3.19
+Changes:    2025-05-16  2.170 update Seat_FS, Seat_BFS to DF49, Charisma to DF5.18, MKE to DF36, SWA to DF37, VZA to DF4.10, LDW_HCA to DF4.10, EfficiencyAssist to DF38, PaCo DF3.15,
+                              TrailerAssist to DF37, Parkheater to DF4.15, InfoSettings to DF34, Hybrid to DF55, AWV to DF49, TPA to DF36
+							  bugfix BAP-FC_FAS_Profiles_P31DF31_v1.11_F
+Changes:    2025-08-12  2.171 lsg plugandcharge set heartbeatfactor to 10 (KPM 10421470)
+Changes:                2.172 disabled low level retries for array FunctionSynchronisation
+Changes:    2025-12-02  2.180 update ACC to DF3.18, LDW_HCA to DF4.11, MobDevKey to DF31, MKE to DF37; remove LDW_HCA2
+Changes:    2026-03-25  2.181 added BSMOIS, BSMOIS2,BSMOIS3 DF30 (D1AHCKL)
+Changes:    2026-03-25  2.182 Bugfix number for  BSMOIS, BSMOIS2,BSMOIS3(D1AHCKL)
+Changes:    2026-04-23  2.183 added California DF36 (D1AHCKL)
+Changes:    2026-05-07  2.184 update InfoSettings to DF35 (D1AHCKL)
+Changes:    2026-06-11  2.185 update HUD to DF3.11 (D1AHCKL), ACC to DF3.19, BC_MFA to F74, VZA to DF4.11, MKE to F38, TPA to DF37
+Changes:    2026-06-15  2.186 update ClimateZone to DF7.17, InteriorLight to DF5.13, PDC to DF4.19
+Changes:    2026-06-16  2.187 update IAA_PSO2 to DF57
+
+
+ClimateZone_P30DF7.17
+**********************************************************************************************************************************************************//-->
+<Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BAPgen_v1.12.xsd" Version="BAP1.12" XMLVersionMajor="2" XMLVersionMinor="187" SGType="ASG-LargeFSG" TaskTimeMs="10" CANIncludeFile="can_asg.h">
+	<InhibitAdditional AdditionalTimer="1"/>
+	<Diagnose>
+		<DebugRxMessage id="BAP_Debug_Cmd"/>
+		<DebugTxMessage id="BAP_Debug_Data"/>
+	</Diagnose>
+	<!--CAN-Rx-Handles-->
+	<CanRxMessage id="BAP_Klima1_FSG_01" number="20" RxPduId="20" LsgId="none"/>
+	<CanRxMessage id="BAP_KlimaMaster_FSG_01" number="20" RxPduId="49" LsgId="66"/>
+	<!--CAN-Tx-Handles-->
+	<CanTxMessage id="BAP_Klima1_ASG_01" number="20" LsgId="none" inhibitTime="8" TxPduId="18"/>
+	<CanTxMessage id="BAP_KlimaMaster_ASG_01" number="20" inhibitTime="5" TxPduId="43" LsgId="66"/>
+	<!--Error values-->
+	<ApplicationError value="0x41" name="AppErr_OutOfRange" />
+	<ApplicationError value="0x43" name="AppErr_MaxDataLengthExceeded" />
+	<ApplicationError value="0x44" name="AppErr_UnitMismatch" />
+	<ApplicationError value="0x45" name="AppErr_ParameterMismatch" />
+	<ApplicationError value="0x46" name="AppErr_InvalidArgument" />
+	<ApplicationError value="0x50" name="AppErr_MethodAborted" />
+	<!--LSG: ClimateZone - -->
+	<!--generated from \\fedfs.wob.vw.vwg\ee\1679-Projekte\BAP-SW\0_Datenfestlegung\00_Funktionen\001_ClimateZone_(front)\ClimateZone_P30DF7.17\BAP-FC_ClimateZone_P30DF7.17_V5.17.0_F.nxml-->
+	<ALsg id="1" name="ClimateZone">
+		<LsgConfig heartbeatFactor="5" useVarDLC="true">
+			<BapConfig PVMajor="3" PVMinor="0" SGClass="1" SGSub="0" DFMajor="7" DFMinor="17"/>
+			<FunctionListItem fctId="2"/>
+			<FunctionListItem fctId="3"/>
+			<FunctionListItem fctId="4"/>
+			<FunctionListItem fctId="13"/>
+			<FunctionListItem fctId="14"/>
+			<FunctionListItem fctId="15"/>
+			<FunctionListItem fctId="16"/>
+			<FunctionListItem fctId="17"/>
+			<FunctionListItem fctId="18"/>
+			<FunctionListItem fctId="19"/>
+			<FunctionListItem fctId="20"/>
+			<FunctionListItem fctId="21"/>
+			<FunctionListItem fctId="22"/>
+			<FunctionListItem fctId="23"/>
+			<FunctionListItem fctId="24"/>
+			<FunctionListItem fctId="25"/>
+			<FunctionListItem fctId="26"/>
+			<FunctionListItem fctId="27"/>
+			<FunctionListItem fctId="28"/>
+			<FunctionListItem fctId="29"/>
+			<FunctionListItem fctId="30"/>
+			<FunctionListItem fctId="31"/>
+			<FunctionListItem fctId="32"/>
+			<FunctionListItem fctId="33"/>
+			<FunctionListItem fctId="34"/>
+			<FunctionListItem fctId="35"/>
+			<FunctionListItem fctId="36"/>
+			<FunctionListItem fctId="37"/>
+			<FunctionListItem fctId="38"/>
+			<FunctionListItem fctId="39"/>
+			<FunctionListItem fctId="40"/>
+			<FunctionListItem fctId="41"/>
+			<FunctionListItem fctId="42"/>
+			<FunctionListItem fctId="43"/>
+			<FunctionListItem fctId="44"/>
+			<FunctionListItem fctId="45"/>
+			<FunctionListItem fctId="46"/>
+			<FunctionListItem fctId="47"/>
+			<FunctionListItem fctId="48"/>
+			<FunctionListItem fctId="49"/>
+			<FunctionListItem fctId="50"/>
+			<FunctionListItem fctId="51"/>
+			<!--FCT: ClimateZone/GetAll-->
+			<Fct id="1" name="GetAll">
+				<Cache maxRetryCounter="4" maxRetryTimer="60">
+					<TX dataType="void" opCode="GetAll">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="238" opCode="Error-StatusAll">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Cache>
+			</Fct>
+			<!--FCT: ClimateZone/BAP_Config-->
+			<Fct id="2" name="BAP_Config">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Reset-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/FunctionList-->
+			<Fct id="3" name="FunctionList">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="8" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/HeartBeat-->
+			<Fct id="4" name="HeartBeat">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="uint8" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/FSG_Control-->
+			<Fct id="13" name="FSG_Control">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="uint8" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="uint8" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/FSG_Setup-->
+			<Fct id="14" name="FSG_Setup">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="11" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/FSG_OperationState-->
+			<Fct id="15" name="FSG_OperationState">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="uint8" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_Temperature-->
+			<Fct id="16" name="ZL_Temperature">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_Temperature-->
+			<Fct id="17" name="ZR_Temperature">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_AirVolume-->
+			<Fct id="18" name="ZL_AirVolume">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_AirVolume-->
+			<Fct id="19" name="ZR_AirVolume">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_AirDistribution-->
+			<Fct id="20" name="ZL_AirDistribution">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_AirDistribution-->
+			<Fct id="21" name="ZR_AirDistribution">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_SeatClimate-->
+			<Fct id="22" name="ZL_SeatClimate">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="byteSequence" length="7" opCode="Get-SetGet">
+						<CanSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="7" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_SeatClimate-->
+			<Fct id="23" name="ZR_SeatClimate">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="byteSequence" length="7" opCode="Get-SetGet">
+						<CanSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="7" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_FootwellTemperature-->
+			<Fct id="24" name="ZL_FootwellTemperature">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_FootwellTemperature-->
+			<Fct id="25" name="ZR_FootwellTemperature">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_ClimateStyle-->
+			<Fct id="26" name="ZL_ClimateStyle">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_ClimateStyle-->
+			<Fct id="27" name="ZR_ClimateStyle">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_ClimateState-->
+			<Fct id="28" name="ZL_ClimateState">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_ClimateState-->
+			<Fct id="29" name="ZR_ClimateState">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_IndividualClimatisation-->
+			<Fct id="30" name="ZL_IndividualClimatisation">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_IndividualClimatisation-->
+			<Fct id="31" name="ZR_IndividualClimatisation">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_Ionisator-->
+			<Fct id="32" name="ZL_Ionisator">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_Ionisator-->
+			<Fct id="33" name="ZR_Ionisator">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_BodyCloseMeasures-->
+			<Fct id="34" name="ZL_BodyCloseMeasures">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_BodyCloseMeasures-->
+			<Fct id="35" name="ZR_BodyCloseMeasures">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/NozzlePositioning-->
+			<Fct id="36" name="NozzlePositioning">
+				<Array maxRetryCounter="0" maxRetryTimer="0">
+					<TX dataType="byteSequence" length="112" opCode="Get-SetGet">
+						<CanSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="113" opCode="Changed-Error-Status">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Array>
+			</Fct>
+			<!--FCT: ClimateZone/NozzleControl-->
+			<Fct id="37" name="NozzleControl">
+				<Method maxRetryCounter="4" maxRetryTimer="60">
+					<TX dataType="fixedByteSequence" length="1" opCode="StartResult">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="uint8" opCode="Error-Processing-Result">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Method>
+			</Fct>
+			<!--FCT: ClimateZone/NozzleStatus-->
+			<Fct id="38" name="NozzleStatus">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_AUTO-->
+			<Fct id="39" name="ZL_AUTO">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_AUTO-->
+			<Fct id="40" name="ZR_AUTO">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/FootHeater-->
+			<Fct id="41" name="FootHeater">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/FSG_Setup2-->
+			<Fct id="42" name="FSG_Setup2">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="11" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_IntelligentAUTO-->
+			<Fct id="43" name="ZL_IntelligentAUTO">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="byteSequence" length="9" opCode="Get-SetGet">
+						<CanSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="9" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_IntelligentAUTO-->
+			<Fct id="44" name="ZR_IntelligentAUTO">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="byteSequence" length="9" opCode="Get-SetGet">
+						<CanSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="9" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/AirDistributionPresetList-->
+			<Fct id="45" name="AirDistributionPresetList">
+				<Array maxRetryCounter="0" maxRetryTimer="0">
+					<TX dataType="byteSequence" length="4" opCode="Get">
+						<CanSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="25" opCode="Changed-Error-Status">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Array>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_AdaptSeatClimateCtrl-->
+			<Fct id="46" name="ZL_AdaptSeatClimateCtrl">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_AdaptSeatClimateCtrl-->
+			<Fct id="47" name="ZR_AdaptSeatClimateCtrl">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_AutomaticSeatClimate-->
+			<Fct id="48" name="ZL_AutomaticSeatClimate">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="byteSequence" length="8" opCode="Get-SetGet">
+						<CanSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="8" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_AutomaticSeatClimate-->
+			<Fct id="49" name="ZR_AutomaticSeatClimate">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="byteSequence" length="8" opCode="Get-SetGet">
+						<CanSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="8" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_Klima1_FSG_01" interTelegramTime="200"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZL_SeatClimate_Extension-->
+			<Fct id="50" name="ZL_SeatClimate_Extension">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateZone/ZR_SeatClimate_Extension-->
+			<Fct id="51" name="ZR_SeatClimate_Extension">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_Klima1_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_Klima1_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+		</LsgConfig>
+	</ALsg>
+	<!--LSG: ClimateMaster - -->
+	<!--generated from BAP-FC_ClimateMaster_P31DF3.19_V1.19.0_F.nxml-->
+	<ALsg id="66" name="ClimateMaster">
+		<LsgConfig heartbeatFactor="5" useVarDLC="true">
+			<BapConfig PVMajor="3" PVMinor="1" SGClass="66" SGSub="0" DFMajor="3" DFMinor="19"/>
+			<FunctionListItem fctId="2"/>
+			<FunctionListItem fctId="3"/>
+			<FunctionListItem fctId="4"/>
+			<FunctionListItem fctId="13"/>
+			<FunctionListItem fctId="14"/>
+			<FunctionListItem fctId="15"/>
+			<FunctionListItem fctId="16"/>
+			<FunctionListItem fctId="17"/>
+			<FunctionListItem fctId="18"/>
+			<FunctionListItem fctId="19"/>
+			<FunctionListItem fctId="20"/>
+			<FunctionListItem fctId="21"/>
+			<FunctionListItem fctId="22"/>
+			<FunctionListItem fctId="23"/>
+			<FunctionListItem fctId="24"/>
+			<FunctionListItem fctId="25"/>
+			<FunctionListItem fctId="26"/>
+			<FunctionListItem fctId="27"/>
+			<FunctionListItem fctId="28"/>
+			<FunctionListItem fctId="29"/>
+			<FunctionListItem fctId="30"/>
+			<FunctionListItem fctId="31"/>
+			<FunctionListItem fctId="32"/>
+			<FunctionListItem fctId="33"/>
+			<FunctionListItem fctId="34"/>
+			<FunctionListItem fctId="35"/>
+			<FunctionListItem fctId="36"/>
+			<FunctionListItem fctId="37"/>
+			<FunctionListItem fctId="38"/>
+			<FunctionListItem fctId="39"/>
+			<FunctionListItem fctId="40"/>
+			<FunctionListItem fctId="41"/>
+			<FunctionListItem fctId="42"/>
+			<FunctionListItem fctId="43"/>
+			<FunctionListItem fctId="44"/>
+			<FunctionListItem fctId="45"/>
+			<FunctionListItem fctId="46"/>
+			<FunctionListItem fctId="47"/>
+			<FunctionListItem fctId="48"/>
+			<FunctionListItem fctId="49"/>
+			<FunctionListItem fctId="50"/>
+			<FunctionListItem fctId="51"/>
+			<FunctionListItem fctId="52"/>
+			<FunctionListItem fctId="53"/>
+			<!--FCT: ClimateMaster/GetAll-->
+			<Fct id="1" name="GetAll">
+				<Cache maxRetryCounter="4" maxRetryTimer="60">
+					<TX dataType="void" opCode="GetAll">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="200" opCode="Error-StatusAll">
+						<CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" interTelegramTime="50"/>
+					</RX>
+				</Cache>
+			</Fct>
+			<!--FCT: ClimateMaster/BAP_Config-->
+			<Fct id="2" name="BAP_Config">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Reset-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/FunctionList-->
+			<Fct id="3" name="FunctionList">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="8" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" interTelegramTime="50"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/HeartBeat-->
+			<Fct id="4" name="HeartBeat">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="uint8" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/FSG_Control-->
+			<Fct id="13" name="FSG_Control">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="uint8" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="uint8" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/FSG_Setup-->
+			<Fct id="14" name="FSG_Setup">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="8" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" interTelegramTime="50"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/FSG_OperationState-->
+			<Fct id="15" name="FSG_OperationState">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="uint8" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/AC-->
+			<Fct id="16" name="AC">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="2" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/AirCirculation-->
+			<Fct id="17" name="AirCirculation">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="2" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/AutomaticAirCirculation-->
+			<Fct id="18" name="AutomaticAirCirculation">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/Solar-->
+			<Fct id="19" name="Solar">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="2" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/IndirectVentilation-->
+			<Fct id="20" name="IndirectVentilation">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/Synchronisation-->
+			<Fct id="21" name="Synchronisation">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/PopupContent-->
+			<Fct id="22" name="PopupContent">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="byteSequence" length="9" opCode="Get-Set-SetGet">
+						<CanSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="9" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" interTelegramTime="50"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/DP_Presentation-->
+			<Fct id="23" name="DP_Presentation">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet-Ack">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status-StatusAck">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/FrontWindowHeater-->
+			<Fct id="24" name="FrontWindowHeater">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/RearWindowHeater-->
+			<Fct id="25" name="RearWindowHeater">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/SteeringwheelHeater-->
+			<Fct id="26" name="SteeringwheelHeater">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/AuxHeater-->
+			<Fct id="27" name="AuxHeater">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/RearAuxHeater-->
+			<Fct id="28" name="RearAuxHeater">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/ResidualHeat-->
+			<Fct id="29" name="ResidualHeat">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/Defrost-->
+			<Fct id="30" name="Defrost">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/RearControlLock-->
+			<Fct id="31" name="RearControlLock">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/RearPriorisation-->
+			<Fct id="32" name="RearPriorisation">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/BlowerCompensation-->
+			<Fct id="33" name="BlowerCompensation">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/AirQuality-->
+			<Fct id="34" name="AirQuality">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/FreshAirConfiguration-->
+			<Fct id="35" name="FreshAirConfiguration">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/FreshAirState-->
+			<Fct id="36" name="FreshAirState">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/PureAir-->
+			<Fct id="37" name="PureAir">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/AirQuality_2-->
+			<Fct id="38" name="AirQuality_2">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="byteSequence" length="18" opCode="Get-SetGet">
+						<CanSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="18" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" interTelegramTime="50"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/BehaviorMode-->
+			<Fct id="39" name="BehaviorMode">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/PSO_ImExport-->
+			<Fct id="40" name="PSO_ImExport">
+				<Array maxRetryCounter="0" maxRetryTimer="0">
+					<TX dataType="byteSequence" length="0" opCode="Get-SetGet">
+						<CanSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="0" opCode="Changed-Error-Status">
+						<CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" interTelegramTime="50"/>
+					</RX>
+				</Array>
+			</Fct>
+			<!--FCT: ClimateMaster/ECOModeControl-->
+			<Fct id="41" name="ECOModeControl">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/VoiceControl-->
+			<Fct id="42" name="VoiceControl">
+				<Array maxRetryCounter="0" maxRetryTimer="0">
+					<TX dataType="byteSequence" length="12" opCode="Get-SetGet">
+						<CanSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="45" opCode="Changed-Error-Status">
+						<CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" interTelegramTime="50"/>
+					</RX>
+				</Array>
+			</Fct>
+			<!--FCT: ClimateMaster/Learning-->
+			<Fct id="43" name="Learning">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/WinterFunction-->
+			<Fct id="44" name="WinterFunction">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/FANOnlyMode-->
+			<Fct id="45" name="FANOnlyMode">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/SeatClimateSynchronisation-->
+			<Fct id="46" name="SeatClimateSynchronisation">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/FSG_Setup2-->
+			<Fct id="47" name="FSG_Setup2">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/CabinScene-->
+			<Fct id="48" name="CabinScene">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/FreshAirState2-->
+			<Fct id="49" name="FreshAirState2">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="void" opCode="Get">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="10" opCode="Error-Status">
+						<CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" interTelegramTime="50"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/ParticleChargingUnit-->
+			<Fct id="50" name="ParticleChargingUnit">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/PremiumAirQuality-->
+			<Fct id="51" name="PremiumAirQuality">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/RearControlLock_SR3-->
+			<Fct id="52" name="RearControlLock_SR3">
+				<Property maxRetryCounter="4" maxRetryTimer="60" cacheAvailable="true">
+					<TX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+						<CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01"/>
+					</RX>
+				</Property>
+			</Fct>
+			<!--FCT: ClimateMaster/GenericSceneConfig-->
+			<Fct id="53" name="GenericSceneConfig">
+				<Array maxRetryCounter="0" maxRetryTimer="0">
+					<TX dataType="byteSequence" length="106" opCode="Get-SetGet">
+						<CanSegInterface canMessage="BAP_KlimaMaster_ASG_01"/>
+					</TX>
+					<RX dataType="byteSequence" length="107" opCode="Changed-Error-Status">
+						<CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" interTelegramTime="50"/>
+					</RX>
+				</Array>
+			</Fct>
+		</LsgConfig>
+	</ALsg>
+</Config>

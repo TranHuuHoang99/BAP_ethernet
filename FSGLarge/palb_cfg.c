@@ -1,0 +1,81 @@
+/******************************************************************
+ *
+ *     Copyright (c) 2006-2023 Audi AG, D-85045 Ingolstadt
+ *
+ ******************************************************************
+ *
+ * Project:    BAP 
+ * Component:  PALB Configuration 
+ *
+ ******************************************************************
+ *
+ * Summary
+ *
+ *  This file contains the configuration of the interfacing layer
+ *  PALB (POSIX Adaption Layer BAP) which is located between the
+ *  POSIX OS and the BAP (Bedien- und Anzeigeprotokoll).
+ *
+ ******************************************************************
+ *
+ * Revision History (w/o SCM)
+ *
+ * Date        Version     Author       Description
+ * ----------------------------------------------------------------
+ * 2020-10-09   1.11.2      KUL         [SSWPPB-70] Initial version
+ ******************************************************************
+ *
+ * Generiert am:    18.08.2026
+ *           um:    18:06:58
+ * Quelldatei:      C:\workspace\sample_project\POC_8255\FSGLarge\BAP_SW1.10_ClimateZone_P30DF79_V5.90_FSG.xml
+ * Zieldatei:       C:\workspace\sample_project\POC_8255\FSGLarge\palb_cfg.c
+ *
+ * BAPgen Version:  1.12.2
+ * BAPgen Stand:    10.10.2023
+ ******************************************************************/
+
+
+/* System includes <...> */
+
+/* Vendor libraries <...> */
+/* own header files "..." */
+#include "palb_cfg.h"
+#include "bap.h"
+
+#if BAP_VERSION != 11220
+#error Datei ist nicht kompatibel mit der Version des BAP-Stacks. Bitte diese Datei noch einmal mit dem mitgeliefertem BAPgen aus der XML-Datei generieren.
+#endif
+
+
+EthPduIdConfigTab_t
+palb_EthPduIdConfigTab[PALB_PDU_CONFIG_TAB_SIZE] =
+{
+    /* PDU ID */                 /* MSG ID */               /* Interface Channel Number */
+	{BAP_Klima1_FSG_01,            BAP_Klima1_FSG_01_MSGID,            (BapCanInterfaceChannel_t) 20},
+	{BAP_KlimaMaster_FSG_01,            BAP_KlimaMaster_FSG_01_MSGID,            (BapCanInterfaceChannel_t) 20},
+	{BAP_KlimaMaster_ASG_04,            BAP_KlimaMaster_ASG_04_MSGID,            (BapCanInterfaceChannel_t) 20},
+	{BAP_KlimaMaster_ASG_03,            BAP_KlimaMaster_ASG_03_MSGID,            (BapCanInterfaceChannel_t) 20},
+	{BAP_KlimaMaster_ASG_02,            BAP_KlimaMaster_ASG_02_MSGID,            (BapCanInterfaceChannel_t) 20},
+	{BAP_KlimaMaster_ASG_01,            BAP_KlimaMaster_ASG_01_MSGID,            (BapCanInterfaceChannel_t) 20},
+	{BAP_Klima1_ASG_04,            BAP_Klima1_ASG_04_MSGID,            (BapCanInterfaceChannel_t) 20},
+	{BAP_Klima1_ASG_03,            BAP_Klima1_ASG_03_MSGID,            (BapCanInterfaceChannel_t) 20},
+	{BAP_Klima1_ASG_02,            BAP_Klima1_ASG_02_MSGID,            (BapCanInterfaceChannel_t) 20},
+	{BAP_Klima1_ASG_01,            BAP_Klima1_ASG_01_MSGID,            (BapCanInterfaceChannel_t) 20}
+};
+
+
+/* Internal makro definitions */
+
+/* Internal type definitions */
+
+/* Internal const deklarations */
+
+/* Internal static variables */
+
+/* static function declarations */
+
+/* Definition (Implementation) of static functions */
+
+/* Definition (Implementation) of global functions */
+
+
+
