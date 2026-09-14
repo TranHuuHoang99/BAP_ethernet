@@ -1,0 +1,1825 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--******************************************************************************************************************************************************-->
+<!--XMLGen:   v0.44.0                                                                                                                                     -->
+<!--                                                                                                                                                      -->
+<!--Name:     Klima1_FSG                                                                                                                                  -->
+<!--                                                                                                                                                      -->
+<!--Author:   ewenzel                                                                                                                                     -->
+<!--Date:                                                                                                                                                 -->
+<!--Version:  1.0                                                                                                                                         -->
+<!--Changes:                                                                                                                                              -->
+<!--                                                                                                                                                      -->
+<!--******************************************************************************************************************************************************-->
+<Config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="BAPgen_v1.10.xsd" Version="BAP1.10" XMLVersionMajor="1" XMLVersionMinor="0" SGType="LargeFSG" TaskTimeMs="10" CANIncludeFile="can_fsg.h">
+  <InhibitAdditional AdditionalTimer="1" />
+  <!--Debug-Interface-->
+  <Diagnose>
+    <DebugRxMessage id="BAP_Debug_Cmd"/>
+    <DebugTxMessage id="BAP_Debug_Data"/>
+  </Diagnose>
+  <!--CAN-Rx-Handles-->
+  <CanRxMessage id="BAP_KlimaMaster_ASG_01" number="20" RxPduId="49" LsgId="66" />
+  <CanRxMessage id="BAP_Klima2_ASG_01" number="20" RxPduId="2" LsgId="none"/>
+  <CanRxMessage id="BAP_Klima1_ASG_01" number="20" RxPduId="20" LsgId="none"/>
+  <CanRxMessage id="BAP_RDK_ASG_01" number="20" RxPduId="2" LsgId="none"/>
+  <!--CAN-Tx-Handles-->
+  <CanTxMessage id="BAP_KlimaMaster_FSG_01" number="20" inhibitTime="5" TxPduId="43" LsgId="66"/>
+  <CanTxMessage id="BAP_Klima1_FSG_01" number="20" LsgId="none" inhibitTime="8" TxPduId="18"/>
+  <CanTxMessage id="BAP_Klima2_FSG_01" number="20" inhibitTime="5" TxPduId="2" LsgId="none"/>
+  <CanTxMessage id="BAP_RDK_FSG_01" number="20" inhibitTime="5" TxPduId="2" LsgId="none"/>
+  <!--Error values-->
+  <ApplicationError value="0x41" name="AppErr_OutOfRange" />
+  <ApplicationError value="0x43" name="AppErr_MaxDataLengthExceeded" />
+  <ApplicationError value="0x44" name="AppErr_UnitMismatch" />
+  <ApplicationError value="0x45" name="AppErr_ParameterMismatch" />
+  <ApplicationError value="0x46" name="AppErr_InvalidArgument" />
+  <ApplicationError value="0x50" name="AppErr_MethodAborted" />
+  <ApplicationError value="0xA0" name="AppErr_IncompleteTransferOfParameterlistATN" />
+  <!--LSG: ClimateZone - -->
+  <!--generated from \\fedfs.wob.vw.vwg\ee\1679-Projekte\BAP-SW\0_Datenfestlegung\00_Funktionen\001_ClimateZone_(front)\ClimateZone_P30DF79\BAP-FC_ClimateZone_P30DF79_V5.90_F.nxml-->
+  <FLsg id="1" name="ClimateZone">
+    <LsgConfig heartbeatTime="10" useVarDLC="true">
+      <BapConfig PVMajor="3" PVMinor="0" SGClass="1" SGSub="0" DFMajor="7" DFMinor="9" />
+      <FunctionListItem fctId="2" />
+      <FunctionListItem fctId="3" />
+      <FunctionListItem fctId="4" />
+      <FunctionListItem fctId="13" />
+      <FunctionListItem fctId="14" />
+      <FunctionListItem fctId="15" />
+      <FunctionListItem fctId="16" />
+      <FunctionListItem fctId="17" />
+      <FunctionListItem fctId="18" />
+      <FunctionListItem fctId="19" />
+      <FunctionListItem fctId="20" />
+      <FunctionListItem fctId="21" />
+      <FunctionListItem fctId="22" />
+      <FunctionListItem fctId="23" />
+      <FunctionListItem fctId="24" />
+      <FunctionListItem fctId="25" />
+      <FunctionListItem fctId="26" />
+      <FunctionListItem fctId="27" />
+      <FunctionListItem fctId="28" />
+      <FunctionListItem fctId="29" />
+      <FunctionListItem fctId="30" />
+      <FunctionListItem fctId="31" />
+      <FunctionListItem fctId="32" />
+      <FunctionListItem fctId="33" />
+      <FunctionListItem fctId="34" />
+      <FunctionListItem fctId="35" />
+      <FunctionListItem fctId="36" />
+      <FunctionListItem fctId="37" />
+      <FunctionListItem fctId="38" />
+      <FunctionListItem fctId="39" />
+      <FunctionListItem fctId="40" />
+      <FunctionListItem fctId="41" />
+      <FunctionListItem fctId="42" />
+      <FunctionListItem fctId="43" />
+      <FunctionListItem fctId="44" />
+      <FunctionListItem fctId="45" />
+      <FunctionListItem fctId="46" />
+      <FunctionListItem fctId="47" />
+      <FunctionListItem fctId="48" />
+      <FunctionListItem fctId="49" />
+      <FunctionListItem fctId="50" />
+      <FunctionListItem fctId="51" />
+      <!--FCT: ClimateZone/GetAll-->
+      <Fct id="1" name="GetAll">
+        <Cache>
+          <RX dataType="void" opCode="GetAll">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="214" opCode="Error-StatusAll">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Cache>
+      </Fct>
+      <!--FCT: ClimateZone/BAP_Config-->
+      <Fct id="2" name="BAP_Config">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Reset-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/FunctionList-->
+      <Fct id="3" name="FunctionList">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="8" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/HeartBeat-->
+      <Fct id="4" name="HeartBeat">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/FSG_Control-->
+      <Fct id="13" name="FSG_Control">
+        <Property heartbeatOn="true">
+          <RX dataType="uint8" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/FSG_Setup-->
+      <Fct id="14" name="FSG_Setup">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="11" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/FSG_OperationState-->
+      <Fct id="15" name="FSG_OperationState">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_Temperature-->
+      <Fct id="16" name="ZL_Temperature">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_Temperature-->
+      <Fct id="17" name="ZR_Temperature">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_AirVolume-->
+      <Fct id="18" name="ZL_AirVolume">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_AirVolume-->
+      <Fct id="19" name="ZR_AirVolume">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_AirDistribution-->
+      <Fct id="20" name="ZL_AirDistribution">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_AirDistribution-->
+      <Fct id="21" name="ZR_AirDistribution">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_SeatClimate-->
+      <Fct id="22" name="ZL_SeatClimate">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="7" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima1_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="7" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_SeatClimate-->
+      <Fct id="23" name="ZR_SeatClimate">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="7" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima1_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="7" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_FootwellTemperature-->
+      <Fct id="24" name="ZL_FootwellTemperature">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_FootwellTemperature-->
+      <Fct id="25" name="ZR_FootwellTemperature">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_ClimateStyle-->
+      <Fct id="26" name="ZL_ClimateStyle">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_ClimateStyle-->
+      <Fct id="27" name="ZR_ClimateStyle">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_ClimateState-->
+      <Fct id="28" name="ZL_ClimateState">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_ClimateState-->
+      <Fct id="29" name="ZR_ClimateState">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_IndividualClimatisation-->
+      <Fct id="30" name="ZL_IndividualClimatisation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_IndividualClimatisation-->
+      <Fct id="31" name="ZR_IndividualClimatisation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_Ionisator-->
+      <Fct id="32" name="ZL_Ionisator">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_Ionisator-->
+      <Fct id="33" name="ZR_Ionisator">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_BodyCloseMeasures-->
+      <Fct id="34" name="ZL_BodyCloseMeasures">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_BodyCloseMeasures-->
+      <Fct id="35" name="ZR_BodyCloseMeasures">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/NozzlePositioning-->
+      <Fct id="36" name="NozzlePositioning">
+        <Array>
+          <RX dataType="byteSequence" length="112" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima1_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="113" opCode="Changed-Error-Status">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Array>
+      </Fct>
+      <!--FCT: ClimateZone/NozzleControl-->
+      <Fct id="37" name="NozzleControl">
+        <Method processingTimer="30">
+          <RX dataType="fixedByteSequence" length="1" opCode="StartResult">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Processing-Result">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Method>
+      </Fct>
+      <!--FCT: ClimateZone/NozzleStatus-->
+      <Fct id="38" name="NozzleStatus">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_AUTO-->
+      <Fct id="39" name="ZL_AUTO">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_AUTO-->
+      <Fct id="40" name="ZR_AUTO">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/FootHeater-->
+      <Fct id="41" name="FootHeater">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/FSG_Setup2-->
+      <Fct id="42" name="FSG_Setup2">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="11" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_IntelligentAUTO-->
+      <Fct id="43" name="ZL_IntelligentAUTO">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="9" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima1_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="9" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_IntelligentAUTO-->
+      <Fct id="44" name="ZR_IntelligentAUTO">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="9" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima1_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="9" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/AirDistributionPresetList-->
+      <Fct id="45" name="AirDistributionPresetList">
+        <Array>
+          <RX dataType="byteSequence" length="4" opCode="Get">
+            <CanSegInterface canMessage="BAP_Klima1_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="25" opCode="Changed-Error-Status">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Array>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_AdaptSeatClimateCtrl-->
+      <Fct id="46" name="ZL_AdaptSeatClimateCtrl">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_AdaptSeatClimateCtrl-->
+      <Fct id="47" name="ZR_AdaptSeatClimateCtrl">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_AutomaticSeatClimate-->
+      <Fct id="48" name="ZL_AutomaticSeatClimate">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="8" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima1_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="8" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_AutomaticSeatClimate-->
+      <Fct id="49" name="ZR_AutomaticSeatClimate">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="8" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima1_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="8" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZL_SeatClimate_Extension-->
+      <Fct id="50" name="ZL_SeatClimate_Extension">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone/ZR_SeatClimate_Extension-->
+      <Fct id="51" name="ZR_SeatClimate_Extension">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima1_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima1_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+    </LsgConfig>
+  </FLsg>
+  <!--LSG: ClimateMaster - -->
+  <!--generated from \\fedfs.wob.vw.vwg\ee\1679-Projekte\BAP-SW\0_Datenfestlegung\00_Funktionen\066_ClimateMaster\ClimateMaster_P31DF3.11\BAP-FC_ClimateMaster_P31DF3.11_V1.11.0_F.nxml-->
+  <FLsg id="66" name="ClimateMaster">
+    <LsgConfig heartbeatTime="10" useVarDLC="true">
+      <BapConfig PVMajor="3" PVMinor="1" SGClass="66" SGSub="0" DFMajor="3" DFMinor="11" />
+      <FunctionListItem fctId="2" />
+      <FunctionListItem fctId="3" />
+      <FunctionListItem fctId="4" />
+      <FunctionListItem fctId="13" />
+      <FunctionListItem fctId="14" />
+      <FunctionListItem fctId="15" />
+      <FunctionListItem fctId="16" />
+      <FunctionListItem fctId="17" />
+      <FunctionListItem fctId="18" />
+      <FunctionListItem fctId="19" />
+      <FunctionListItem fctId="20" />
+      <FunctionListItem fctId="21" />
+      <FunctionListItem fctId="22" />
+      <FunctionListItem fctId="23" />
+      <FunctionListItem fctId="24" />
+      <FunctionListItem fctId="25" />
+      <FunctionListItem fctId="26" />
+      <FunctionListItem fctId="27" />
+      <FunctionListItem fctId="28" />
+      <FunctionListItem fctId="29" />
+      <FunctionListItem fctId="30" />
+      <FunctionListItem fctId="31" />
+      <FunctionListItem fctId="32" />
+      <FunctionListItem fctId="33" />
+      <FunctionListItem fctId="34" />
+      <FunctionListItem fctId="35" />
+      <FunctionListItem fctId="36" />
+      <FunctionListItem fctId="37" />
+      <FunctionListItem fctId="38" />
+      <FunctionListItem fctId="39" />
+      <FunctionListItem fctId="40" />
+      <FunctionListItem fctId="41" />
+      <FunctionListItem fctId="42" />
+      <FunctionListItem fctId="43" />
+      <FunctionListItem fctId="44" />
+      <FunctionListItem fctId="45" />
+      <FunctionListItem fctId="46" />
+      <FunctionListItem fctId="47" />
+      <FunctionListItem fctId="48" />
+      <!--FCT: ClimateMaster/GetAll-->
+      <Fct id="1" name="GetAll">
+        <Cache>
+          <RX dataType="void" opCode="GetAll">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="170" opCode="Error-StatusAll">
+            <CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Cache>
+      </Fct>
+      <!--FCT: ClimateMaster/BAP_Config-->
+      <Fct id="2" name="BAP_Config">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Reset-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/FunctionList-->
+      <Fct id="3" name="FunctionList">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="8" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/HeartBeat-->
+      <Fct id="4" name="HeartBeat">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/FSG_Control-->
+      <Fct id="13" name="FSG_Control">
+        <Property heartbeatOn="true">
+          <RX dataType="uint8" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/FSG_Setup-->
+      <Fct id="14" name="FSG_Setup">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="8" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/FSG_OperationState-->
+      <Fct id="15" name="FSG_OperationState">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/AC-->
+      <Fct id="16" name="AC">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="2" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/AirCirculation-->
+      <Fct id="17" name="AirCirculation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="2" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/AutomaticAirCirculation-->
+      <Fct id="18" name="AutomaticAirCirculation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/Solar-->
+      <Fct id="19" name="Solar">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="2" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/IndirectVentilation-->
+      <Fct id="20" name="IndirectVentilation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/Synchronisation-->
+      <Fct id="21" name="Synchronisation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/PopupContent-->
+      <Fct id="22" name="PopupContent">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="9" opCode="Get-Set-SetGet">
+            <CanSegInterface canMessage="BAP_KlimaMaster_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="9" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/DP_Presentation-->
+      <Fct id="23" name="DP_Presentation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet-Ack">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status-StatusAck">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/FrontWindowHeater-->
+      <Fct id="24" name="FrontWindowHeater">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/RearWindowHeater-->
+      <Fct id="25" name="RearWindowHeater">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/SteeringwheelHeater-->
+      <Fct id="26" name="SteeringwheelHeater">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/AuxHeater-->
+      <Fct id="27" name="AuxHeater">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/RearAuxHeater-->
+      <Fct id="28" name="RearAuxHeater">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/ResidualHeat-->
+      <Fct id="29" name="ResidualHeat">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/Defrost-->
+      <Fct id="30" name="Defrost">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/RearControlLock-->
+      <Fct id="31" name="RearControlLock">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/RearPriorisation-->
+      <Fct id="32" name="RearPriorisation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/BlowerCompensation-->
+      <Fct id="33" name="BlowerCompensation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/AirQuality-->
+      <Fct id="34" name="AirQuality">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/FreshAirConfiguration-->
+      <Fct id="35" name="FreshAirConfiguration">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/FreshAirState-->
+      <Fct id="36" name="FreshAirState">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/PureAir-->
+      <Fct id="37" name="PureAir">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/AirQuality_2-->
+      <Fct id="38" name="AirQuality_2">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="18" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_KlimaMaster_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="18" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/BehaviorMode-->
+      <Fct id="39" name="BehaviorMode">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/PSO_ImExport-->
+      <Fct id="40" name="PSO_ImExport">
+        <Array>
+          <RX dataType="byteSequence" length="273" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_KlimaMaster_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="276" opCode="Changed-Error-Status">
+            <CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Array>
+      </Fct>
+      <!--FCT: ClimateMaster/ECOModeControl-->
+      <Fct id="41" name="ECOModeControl">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/VoiceControl-->
+      <Fct id="42" name="VoiceControl">
+        <Array>
+          <RX dataType="byteSequence" length="44" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_KlimaMaster_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="45" opCode="Changed-Error-Status">
+            <CanSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Array>
+      </Fct>
+      <!--FCT: ClimateMaster/Learning-->
+      <Fct id="43" name="Learning">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/WinterFunction-->
+      <Fct id="44" name="WinterFunction">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/FANOnlyMode-->
+      <Fct id="45" name="FANOnlyMode">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/SeatClimateSynchronisation-->
+      <Fct id="46" name="SeatClimateSynchronisation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/FSG_Setup2-->
+      <Fct id="47" name="FSG_Setup2">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateMaster/CabinScene-->
+      <Fct id="48" name="CabinScene">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_KlimaMaster_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+    </LsgConfig>
+  </FLsg>
+  <!--LSG: ClimateZone2 - -->
+  <!--generated from \\fedfs.wob.vw.vwg\ee\1679-Projekte\BAP-SW\0_Datenfestlegung\00_Funktionen\001_ClimateZone_(front)\ClimateZone_P30DF79\BAP-FC_ClimateZone_P30DF79_V5.90_F.nxml-->
+  <FLsg id="2" name="ClimateZone2">
+    <LsgConfig heartbeatTime="10" useVarDLC="true">
+      <BapConfig PVMajor="3" PVMinor="0" SGClass="1" SGSub="0" DFMajor="7" DFMinor="9" />
+      <FunctionListItem fctId="2" />
+      <FunctionListItem fctId="3" />
+      <FunctionListItem fctId="4" />
+      <FunctionListItem fctId="13" />
+      <FunctionListItem fctId="14" />
+      <FunctionListItem fctId="15" />
+      <FunctionListItem fctId="16" />
+      <FunctionListItem fctId="17" />
+      <FunctionListItem fctId="18" />
+      <FunctionListItem fctId="19" />
+      <FunctionListItem fctId="20" />
+      <FunctionListItem fctId="21" />
+      <FunctionListItem fctId="22" />
+      <FunctionListItem fctId="23" />
+      <FunctionListItem fctId="24" />
+      <FunctionListItem fctId="25" />
+      <FunctionListItem fctId="26" />
+      <FunctionListItem fctId="27" />
+      <FunctionListItem fctId="28" />
+      <FunctionListItem fctId="29" />
+      <FunctionListItem fctId="30" />
+      <FunctionListItem fctId="31" />
+      <FunctionListItem fctId="32" />
+      <FunctionListItem fctId="33" />
+      <FunctionListItem fctId="34" />
+      <FunctionListItem fctId="35" />
+      <FunctionListItem fctId="36" />
+      <FunctionListItem fctId="37" />
+      <FunctionListItem fctId="38" />
+      <FunctionListItem fctId="39" />
+      <FunctionListItem fctId="40" />
+      <FunctionListItem fctId="41" />
+      <FunctionListItem fctId="42" />
+      <FunctionListItem fctId="43" />
+      <FunctionListItem fctId="44" />
+      <FunctionListItem fctId="45" />
+      <FunctionListItem fctId="46" />
+      <FunctionListItem fctId="47" />
+      <FunctionListItem fctId="48" />
+      <FunctionListItem fctId="49" />
+      <FunctionListItem fctId="50" />
+      <FunctionListItem fctId="51" />
+      <!--FCT: ClimateZone2/GetAll-->
+      <Fct id="1" name="GetAll">
+        <Cache>
+          <RX dataType="void" opCode="GetAll">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="214" opCode="Error-StatusAll">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Cache>
+      </Fct>
+      <!--FCT: ClimateZone2/BAP_Config-->
+      <Fct id="2" name="BAP_Config">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Reset-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/FunctionList-->
+      <Fct id="3" name="FunctionList">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="8" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/HeartBeat-->
+      <Fct id="4" name="HeartBeat">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/FSG_Control-->
+      <Fct id="13" name="FSG_Control">
+        <Property heartbeatOn="true">
+          <RX dataType="uint8" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/FSG_Setup-->
+      <Fct id="14" name="FSG_Setup">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="11" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/FSG_OperationState-->
+      <Fct id="15" name="FSG_OperationState">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_Temperature-->
+      <Fct id="16" name="ZL_Temperature">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_Temperature-->
+      <Fct id="17" name="ZR_Temperature">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_AirVolume-->
+      <Fct id="18" name="ZL_AirVolume">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_AirVolume-->
+      <Fct id="19" name="ZR_AirVolume">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_AirDistribution-->
+      <Fct id="20" name="ZL_AirDistribution">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_AirDistribution-->
+      <Fct id="21" name="ZR_AirDistribution">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_SeatClimate-->
+      <Fct id="22" name="ZL_SeatClimate">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="7" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima2_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="7" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_SeatClimate-->
+      <Fct id="23" name="ZR_SeatClimate">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="7" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima2_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="7" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_FootwellTemperature-->
+      <Fct id="24" name="ZL_FootwellTemperature">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_FootwellTemperature-->
+      <Fct id="25" name="ZR_FootwellTemperature">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_ClimateStyle-->
+      <Fct id="26" name="ZL_ClimateStyle">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_ClimateStyle-->
+      <Fct id="27" name="ZR_ClimateStyle">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_ClimateState-->
+      <Fct id="28" name="ZL_ClimateState">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_ClimateState-->
+      <Fct id="29" name="ZR_ClimateState">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_IndividualClimatisation-->
+      <Fct id="30" name="ZL_IndividualClimatisation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_IndividualClimatisation-->
+      <Fct id="31" name="ZR_IndividualClimatisation">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_Ionisator-->
+      <Fct id="32" name="ZL_Ionisator">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_Ionisator-->
+      <Fct id="33" name="ZR_Ionisator">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="3" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_BodyCloseMeasures-->
+      <Fct id="34" name="ZL_BodyCloseMeasures">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_BodyCloseMeasures-->
+      <Fct id="35" name="ZR_BodyCloseMeasures">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/NozzlePositioning-->
+      <Fct id="36" name="NozzlePositioning">
+        <Array>
+          <RX dataType="byteSequence" length="112" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima2_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="113" opCode="Changed-Error-Status">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Array>
+      </Fct>
+      <!--FCT: ClimateZone2/NozzleControl-->
+      <Fct id="37" name="NozzleControl">
+        <Method processingTimer="30">
+          <RX dataType="fixedByteSequence" length="1" opCode="StartResult">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Processing-Result">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Method>
+      </Fct>
+      <!--FCT: ClimateZone2/NozzleStatus-->
+      <Fct id="38" name="NozzleStatus">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_AUTO-->
+      <Fct id="39" name="ZL_AUTO">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_AUTO-->
+      <Fct id="40" name="ZR_AUTO">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/FootHeater-->
+      <Fct id="41" name="FootHeater">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="5" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="5" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/FSG_Setup2-->
+      <Fct id="42" name="FSG_Setup2">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="11" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_IntelligentAUTO-->
+      <Fct id="43" name="ZL_IntelligentAUTO">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="9" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima2_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="9" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_IntelligentAUTO-->
+      <Fct id="44" name="ZR_IntelligentAUTO">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="9" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima2_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="9" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/AirDistributionPresetList-->
+      <Fct id="45" name="AirDistributionPresetList">
+        <Array>
+          <RX dataType="byteSequence" length="4" opCode="Get">
+            <CanSegInterface canMessage="BAP_Klima2_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="25" opCode="Changed-Error-Status">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Array>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_AdaptSeatClimateCtrl-->
+      <Fct id="46" name="ZL_AdaptSeatClimateCtrl">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_AdaptSeatClimateCtrl-->
+      <Fct id="47" name="ZR_AdaptSeatClimateCtrl">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_AutomaticSeatClimate-->
+      <Fct id="48" name="ZL_AutomaticSeatClimate">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="8" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima2_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="8" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_AutomaticSeatClimate-->
+      <Fct id="49" name="ZR_AutomaticSeatClimate">
+        <Property heartbeatOn="true">
+          <RX dataType="byteSequence" length="8" opCode="Get-SetGet">
+            <CanSegInterface canMessage="BAP_Klima2_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="8" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZL_SeatClimate_Extension-->
+      <Fct id="50" name="ZL_SeatClimate_Extension">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: ClimateZone2/ZR_SeatClimate_Extension-->
+      <Fct id="51" name="ZR_SeatClimate_Extension">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="6" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_Klima2_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_Klima2_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+    </LsgConfig>
+  </FLsg>
+  <FLsg id="7" name="RDK">
+    <LsgConfig heartbeatTime="10" useVarDLC="true">
+      <BapConfig PVMajor="3" PVMinor="1" SGClass="7" SGSub="0" DFMajor="5" DFMinor="5" />
+      <FunctionListItem fctId="2" />
+      <FunctionListItem fctId="3" />
+      <FunctionListItem fctId="4" />
+      <FunctionListItem fctId="13" />
+      <FunctionListItem fctId="14" />
+      <FunctionListItem fctId="15" />
+      <FunctionListItem fctId="16" />
+      <FunctionListItem fctId="17" />
+      <FunctionListItem fctId="18" />
+      <FunctionListItem fctId="19" />
+      <FunctionListItem fctId="20" />
+      <FunctionListItem fctId="21" />
+      <FunctionListItem fctId="22" />
+      <FunctionListItem fctId="23" />
+      <FunctionListItem fctId="24" />
+      <FunctionListItem fctId="25" />
+      <FunctionListItem fctId="26" />
+      <FunctionListItem fctId="27" />
+      <FunctionListItem fctId="28" />
+      <FunctionListItem fctId="29" />
+      <!--FCT: RDK/GetAll-->
+      <Fct id="1" name="GetAll">
+        <Cache>
+          <RX dataType="void" opCode="GetAll">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="99" opCode="Error-StatusAll">
+            <CanSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Cache>
+      </Fct>
+      <!--FCT: RDK/BAP_Config-->
+      <Fct id="2" name="BAP_Config">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Reset-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/FunctionList-->
+      <Fct id="3" name="FunctionList">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="8" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/Heartbeat-->
+      <Fct id="4" name="Heartbeat">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/FSG_Control-->
+      <Fct id="13" name="FSG_Control">
+        <Property heartbeatOn="true">
+          <RX dataType="uint8" opCode="Get-SetGet-Ack">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status-StatusAck">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/FSG_Setup-->
+      <Fct id="14" name="FSG_Setup">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/FSG_OperationState-->
+      <Fct id="15" name="FSG_OperationState">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/ActualState-->
+      <Fct id="16" name="ActualState">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/ActualPressure-->
+      <Fct id="17" name="ActualPressure">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/ActualTemperature-->
+      <Fct id="18" name="ActualTemperature">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="11" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/RequiredPressure-->
+      <Fct id="19" name="RequiredPressure">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/TyreList-->
+      <Fct id="20" name="TyreList">
+        <Array>
+          <RX dataType="byteSequence" length="4" opCode="Get">
+            <CanSegInterface canMessage="BAP_RDK_ASG_01" interTelegramTime="50" />
+          </RX>
+          <TX dataType="byteSequence" length="1415" opCode="Changed-Error-Status">
+            <CanSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Array>
+      </Fct>
+      <!--FCT: RDK/SavePressure-->
+      <Fct id="21" name="SavePressure">
+        <Method processingTimer="30">
+          <RX dataType="uint8" opCode="AbortResult-StartResult">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="uint8" opCode="Error-Processing-Result">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Method>
+      </Fct>
+      <!--FCT: RDK/SelectedTyre-->
+      <Fct id="22" name="SelectedTyre">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="2" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/DifferentialPressure-->
+      <Fct id="23" name="DifferentialPressure">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="11" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/ResidualBatteryLifetime-->
+      <Fct id="24" name="ResidualBatteryLifetime">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="byteSequence" length="7" opCode="Error-Status">
+            <CanSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/SelectedPressureLevel-->
+      <Fct id="25" name="SelectedPressureLevel">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="2" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="2" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/SelectedWheelType-->
+      <Fct id="26" name="SelectedWheelType">
+        <Property heartbeatOn="true">
+          <RX dataType="fixedByteSequence" length="4" opCode="Get-SetGet">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/RaceCircuitMode-->
+      <Fct id="27" name="RaceCircuitMode">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="3" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/RequiredPressure_TempDep-->
+      <Fct id="28" name="RequiredPressure_TempDep">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="6" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+      <!--FCT: RDK/PressureModification-->
+      <Fct id="29" name="PressureModification">
+        <Property heartbeatOn="true">
+          <RX dataType="void" opCode="Get">
+            <CanNoneSegInterface canMessage="BAP_RDK_ASG_01" />
+          </RX>
+          <TX dataType="fixedByteSequence" length="4" opCode="Error-Status">
+            <CanNoneSegInterface canMessage="BAP_RDK_FSG_01" />
+          </TX>
+        </Property>
+      </Fct>
+    </LsgConfig>
+  </FLsg>
+</Config>
+
