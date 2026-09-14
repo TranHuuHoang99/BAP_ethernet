@@ -70,3 +70,48 @@ Testing/
 
 # vscode
 .vscode
+
+# 1. Các thư viện tải về (TUYỆT ĐỐI không đẩy lên Git)
+node_modules/
+jspm_packages/
+web_modules/
+
+# 2. Thư mục chứa code sau khi biên dịch (Build/Dist)
+dist/
+build/
+out/
+.next/
+.nuxt/
+
+# 3. Các file chứa mật khẩu, chìa khóa bí mật (Bảo mật)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+*.pem
+*.key
+
+# 4. Nhật ký lỗi (Logs)
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 5. Các file rác của hệ điều hành
+.DS_Store
+Thumbs.db
+Desktop.ini
+.Spotlight-V100
+.Trashes
+
+# 6. Thư mục rác của các trình soạn thảo code (VS Code, WebStorm)
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+

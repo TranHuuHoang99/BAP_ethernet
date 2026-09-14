@@ -1,0 +1,2 @@
+
+export let FSG_SIMULATION_PORT = 8080;
