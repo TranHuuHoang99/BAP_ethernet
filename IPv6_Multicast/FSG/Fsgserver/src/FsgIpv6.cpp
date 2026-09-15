@@ -2,14 +2,14 @@
 #include <iomanip>
 #include <vector>
 #include <cstring>
-#include "IPv6_Multicast/FSG/FsgLarge/palb_cfg_project.h"
+#include "palb_cfg_project.h"
 
 #define LSG_START_RETRY_INTERVAL_MS 1000
 #define TIMEOUT_AFTER_START_LSG 3000 
 
 static const std::string MULTICAST_GROUP = "ff14::1:fe";
 static const uint16_t    MULTICAST_PORT  = 42514u;
-static const std::string VLAN_IP         = "br0.3";
+static const std::string VLAN_IP         = "vEthernet (br0.3)";
 static const uint16_t    SRC_PORT        = 42993u;
 
 extern "C"
@@ -48,48 +48,48 @@ std::shared_ptr<FsgIpv6> FsgIpv6::instance(void)
 }
 
 void FsgIpv6::acknowledge(const lsgId_t aLsgId,
-                             const fctId_t aFctId,
-                             const BapAcknowledge_et aeAcknowledge)
+                          const fctId_t aFctId,
+                          const BapAcknowledge_et aeAcknowledge)
 {
 
 }
 
 void FsgIpv6::indicationVoid(const lsgId_t aLsgId,
-                                const fctId_t aFctId,
-                                const enum BapIndication_t aeIndication)
+                             const fctId_t aFctId,
+                             const enum BapIndication_t aeIndication)
 {
 
 }
 
 void FsgIpv6::indicationInt8(const lsgId_t aLsgId,
-                                const fctId_t aFctId,
-                                const enum BapIndication_t aeIndication,
-                                const uint8_t au8Value)
+                             const fctId_t aFctId,
+                             const enum BapIndication_t aeIndication,
+                             const uint8_t au8Value)
 {
 
 }
 
 void FsgIpv6::indicationInt16(const lsgId_t aLsgId,
-                                 fctId_t aFctId,
-                                 enum BapIndication_t aeIndication,
-                                 uint16_t au16Value)
+                              fctId_t aFctId,
+                              enum BapIndication_t aeIndication,
+                              uint16_t au16Value)
 {
 
 }
 
 void FsgIpv6::indicationInt32(const lsgId_t aLsgId,
-                                 fctId_t aFctId,
-                                 enum BapIndication_t aeIndication,
-                                 uint32_t au32Value)
+                              fctId_t aFctId,
+                              enum BapIndication_t aeIndication,
+                              uint32_t au32Value)
 {
 
 }
 
 void FsgIpv6::indicationByteSequence(const lsgId_t aLsgId,
-                                        const fctId_t aFctId,
-                                        const enum BapIndication_t aeIndication,
-                                        const volatile uint8_t apValue[],
-                                        const uint32_t au32Length)
+                                     const fctId_t aFctId,
+                                     const enum BapIndication_t aeIndication,
+                                     const volatile uint8_t apValue[],
+                                     const uint32_t au32Length)
 {
     std::cout << "[SERVER] aLsgId : " << static_cast<int32_t>(aLsgId) << ", "
               << "aFctId: " << static_cast<int32_t>(aFctId) << ", "
@@ -97,7 +97,7 @@ void FsgIpv6::indicationByteSequence(const lsgId_t aLsgId,
     std::cout << "[SERVER][data] : ";
     for (int32_t i = 0; i < (int32_t)au32Length; i++) {
         std::cout << std::hex << std::setw(2) << std::setfill('0')
-                    << (int32_t)(apValue[i]) << " ";
+                  << (int32_t)(apValue[i]) << " ";
     }
     std::cout << '\n';
 
@@ -223,18 +223,21 @@ void FsgIpv6::start(void)
     int32_t retry = 0;
     while (!m_pduManager->isMulticastRunning()) {
         if (m_pduManager->startMulticast()) {
-            std::cout << "Multicast started successfully";
+            std::cout << "Multicast started successfully\n";
             break;
         }
         retry++;
         std::cerr << "Failed to start multicast (attempt " << retry
-                    << "), retrying in " << LSG_START_RETRY_INTERVAL_MS << "ms...";
+                  << "), retrying in " << LSG_START_RETRY_INTERVAL_MS << "ms...\n";
 #if defined(__CYGWIN__) || defined(WIN32)
         Sleep(1000);
 #else
         usleep(LSG_START_RETRY_INTERVAL_MS * 1000);
 #endif // defined(__CYGWIN__) || defined(WIN32)
     }
+
+    _genDataBase();
+    _sendInitialValue();
 
     while (true) {
         _waitBAPTasks(1);
@@ -272,6 +275,23 @@ void FsgIpv6::_waitBAPTasks(int32_t time_delay)
 
 bool_t FsgIpv6::transmitTxData(ptr_t apData, const uint16_t au16MsgLength)
 {
+    if (!m_pduManager) {
+        std::cerr << "PDUManager is nullptr\n";
+        return BAP_FALSE;
+    }
+    if (au16MsgLength < BAP_SOAD_HEADER_SIZE) {
+        std::cerr << "TX buffer too short: " << au16MsgLength << '\n';
+        return BAP_FALSE;
+    }
+    // Parse SoAD header: [4B msg_id big-endian][4B length big-endian] + payload
+    const uint32_t msg_id = (static_cast<uint32_t>(apData[0]) << 24) |
+                            (static_cast<uint32_t>(apData[1]) << 16) |
+                            (static_cast<uint32_t>(apData[2]) <<  8) |
+                            static_cast<uint32_t>(apData[3]);
+    const uint32_t payload_len = static_cast<uint32_t>(au16MsgLength) - BAP_SOAD_HEADER_SIZE;
+    std::vector<uint8_t> payload(apData + BAP_SOAD_HEADER_SIZE, apData + au16MsgLength);
+    m_pduManager->insertPDU({msg_id, payload_len, std::move(payload)});
+    m_pduManager->sendPDU();
     return BAP_TRUE;
 }
 
@@ -432,5 +452,126 @@ int32_t FsgIpv6::_startLsg(void)
 int32_t FsgIpv6::_stopLsg(void)
 {
     return 0;
+}
+
+void FsgIpv6::_sendInitialValue(void)
+{
+    std::cout << "[SERVER] sending initial value to ASG\n";
+    const std::vector<uint8_t> payload = {0u, 0u, 0u, 0u, 0u, 0u};
+    BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateZone,
+                            fctId_t::BapFct_ClimateZone_ZL_Temperature,
+                            BapRequest_t::BapReq_Data,
+                            payload.data(),
+                            6);
+}
+
+void FsgIpv6::_genDataBase(void)
+{
+    if (m_dataBase == nullptr) {
+        LOG_ERR << "climate zone rec mapping is nullptr";
+        return;
+    }
+    LOG_DEBUG << "init data base for all lsgid";
+    for (const lsgId_t lsg : lsgId_vec) {
+        if (_genDataFollowLsgId(lsg) != 0) {
+            LOG_ERR << "failed to init data base for lsgId : " << static_cast<int32_t>(lsg);
+        } else {
+            LOG_DEBUG << "success to init data base for lsgId : " << static_cast<int32_t>(lsg);
+        }
+    }
+    LOG_DEBUG << "init data base for all lsgid success";
+}
+
+int32_t FsgIpv6::_genDataFollowLsgId(const lsgId_t lsgId)
+{
+    if (m_dataBase == nullptr) {
+        LOG_ERR << "climate zone rec mapping is nullptr";
+        return -1;
+    }
+
+    const BapLsgRomRow_pot lsgRomRow = BAP_GetLsgRomRow(lsgId);
+    if (lsgRomRow == NULL) {
+        LOG_DEBUG << "lsg not found";
+        return 0;
+    }
+    const int32_t fct_numb = lsgRomRow->u8FctRomTableSize;
+    const int32_t fct_index = lsgRomRow->u16FctRomIndex;
+    LOG_DEBUG << "number_func="
+                  << fct_numb
+                  << ", start_index="
+                  << fct_index
+                  << ", lsgId="
+                  << static_cast<int32_t>(lsgId);
+
+    int32_t firstErr = 0;
+    for (int32_t i = 0; i < fct_numb; i++) {
+        const BapFctRomRow_ot& fct = BAP_FctRomTables[fct_index + i];
+        int32_t err = 0;
+        if (fct.eFunctionClass == BapFctCls_Method ||
+            fct.eFunctionClass == BapFctCls_Cache ||
+            fct.fctId == (fctId_t)2 ||
+            fct.fctId == (fctId_t)3 ||
+            fct.fctId == (fctId_t)4)
+        {
+            LOG_DEBUG << "Skip function : " << static_cast<int32_t>(fct.fctId);
+            continue;
+        }
+
+        if (fct.eTxDataType == BapDataType_t::BapDt_Void) {
+            LOG_DEBUG << "skip function : "
+                      << static_cast<int32_t>(fct.fctId) << " type void";
+            continue;
+        }
+
+        switch (fct.eTxDataType) {
+            case BapDataType_t::BapDt_Int8:
+            {
+                err = m_dataBase->insert<uint8_t>(lsgId, fct.fctId, {0u, fct.u32TxSize});
+                break;
+            }
+            case BapDataType_t::BapDt_Int16:
+            {
+                err = m_dataBase->insert<uint16_t>(lsgId, fct.fctId, {0u, fct.u32TxSize});
+                break;
+            }
+            case BapDataType_t::BapDt_Int32:
+            {
+                err = m_dataBase->insert<uint32_t>(lsgId, fct.fctId, {0u, fct.u32TxSize});
+                break;
+            }
+            case BapDataType_t::BapDt_FixedByteSequence: // FALL-THROUGH
+            case BapDataType_t::BapDt_ByteSequence:
+            {
+                std::vector<uint8_t> zeroBuf(fct.u32TxSize, 0u);
+                err = m_dataBase->insert<std::vector<uint8_t>>(lsgId,
+                                                               fct.fctId,
+                                                               {zeroBuf, fct.u32TxSize});
+                break;
+            }
+            default:
+            {
+                /* unknown data type – skip but warn */
+                LOG_ERR << "insert data base : unknown eTxDataType="
+                          << (int32_t)fct.eTxDataType
+                          << " for fctId=" << (int32_t)fct.fctId;
+                break;
+            }
+        }
+
+        if (firstErr == 0) {
+            firstErr = err;
+        }
+        LOG_ERR << "insert data base : lsgId : "
+                    << (int32_t)fct.lsgId
+                    << " fctId="
+                    << (int32_t)fct.fctId
+                    << " type=" << (int32_t)fct.eTxDataType
+                    << " size=" << (int32_t)fct.u32TxSize;
+    }
+
+    if (firstErr != 0) {
+        LOG_DEBUG << "Failed to init send TX buffer";
+    }
+    return firstErr;
 }
 

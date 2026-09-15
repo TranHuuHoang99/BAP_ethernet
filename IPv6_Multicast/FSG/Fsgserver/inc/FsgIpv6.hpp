@@ -27,14 +27,15 @@
 extern "C" {
 
 #include "bap.h"
-#include "IPv6_Multicast/FSG/FsgLarge/bap_defines.h"
 #include "bap_util.h"
 #include "bap_canubs.h"
 #include "palb.h"
+#include "bap_defines.h"
 
 } // extern "C"
 
 #include "PDUManager.h"
+#include "common/FsgDataBase.hpp"
 
 const std::vector<lsgId_t> lsgId_vec = {
     lsgId_t::BapLsg_ClimateZone,
@@ -57,6 +58,9 @@ private:
     int32_t _stopLsg(void);
     void _onPduReceived(const PDU& pdu);
     void _tickBap(void);
+    void _sendInitialValue(void);
+    void _genDataBase(void);
+    int32_t _genDataFollowLsgId(const lsgId_t lsgId);
 
 public:
     FsgIpv6(FsgIpv6::FsgIpv6Token) {}
@@ -66,8 +70,8 @@ public:
     static std::shared_ptr<FsgIpv6> instance(void);
 
     void acknowledge(const lsgId_t aLsgId,
-                         const fctId_t aFctId,
-                         const BapAcknowledge_et aeAcknowledge);
+                     const fctId_t aFctId,
+                     const BapAcknowledge_et aeAcknowledge);
     void indicationVoid(const lsgId_t aLsgId,
                         const fctId_t aFctId,
                         const enum BapIndication_t aeIndication);
@@ -100,6 +104,7 @@ public:
 
 private:
     std::unique_ptr<PDUManager> m_pduManager;
+    std::unique_ptr<DataBase> m_dataBase;
     std::mutex m_txMtx;
     std::mutex m_rxMtx;
     std::recursive_mutex m_bapMtx;

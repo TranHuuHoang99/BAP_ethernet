@@ -72,6 +72,8 @@ include_directories(
     FSG/include
     ### FSG server ###
     ${FSG_SERVER_DIR}/inc
+    ${FSG_SERVER_DIR}/inc/common
+    ${FSG_SERVER_DIR}/inc/log
     ### libPDU_MultiPlex ###
     ${PDU_LIB_DIR}/include
     ### Workspace root (for "IPv6_Multicast/..." relative includes) ###

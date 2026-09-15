@@ -9,21 +9,24 @@
 // ISocketWrapper.h / ProductionSocketWrapper.h; only the C runtime helpers
 // are needed here. On POSIX we include the BSD-socket header set directly.
 #if defined(_WIN32) && !defined(__CYGWIN__)
-  #include <cstring>   // memcpy
+#include <cstring>
+#include <winsock2.h>
+#include <iphlpapi.h>
+#pragma comment(lib, "IPHLPAPI.lib")
 #else
-  #include <arpa/inet.h>
-  #include <errno.h>
-  #include <fcntl.h>
-  #include <net/if.h>
-  #include <netinet/in.h>
-  #include <netinet/ip.h>
-  #include <netinet/ip6.h>
-  #include <string.h>
-  #include <poll.h>
-  #include <sys/socket.h>
-  #include <sys/types.h>
-  #include <unistd.h>
-#endif
+#include <arpa/inet.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <net/if.h>
+#include <netinet/in.h>
+#include <netinet/ip.h>
+#include <netinet/ip6.h>
+#include <string.h>
+#include <poll.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+#endif // defined(_WIN32) && !defined(__CYGWIN__)
 
 #include <algorithm>
 #include <chrono>
@@ -31,6 +34,7 @@
 #include <limits>
 #include <mutex>
 #include <atomic>
+#include <iostream>
 
 // ---------------------------------------------------------------------------
 // Platform error-reporting shim.
@@ -901,7 +905,7 @@ bool MulticastSocket::setupSocket() {
                 mreq.imr_ifindex = 0; // kernel chooses
                 joined = socket_wrapper_->setsockopt(recieve_sockfd_, IPPROTO_IP, IP_ADD_MEMBERSHIP, &mreq, sizeof(mreq)) >= 0;
             }
-#endif
+#endif // !defined(_WIN32) || defined(__CYGWIN__)
             if (!joined) {
                 // Portable path (winsock, or systems without ip_mreqn).
                 ip_mreq mreq2{};
@@ -949,10 +953,37 @@ bool MulticastSocket::setupSocket() {
             // Join IPv6 multicast group; optionally on a specific interface
             struct ipv6_mreq mreq6{};
             inet_pton(AF_INET6, group_addr_.c_str(), &mreq6.ipv6mr_multiaddr);
+
             unsigned int ifindex6 = 0;
             if (!local_addr_.empty()) {
                 // If local_addr_ looks like an interface name, try if_nametoindex
                 ifindex6 = socket_wrapper_->if_nametoindex(local_addr_.c_str());
+#ifdef _WIN32
+            if (ifindex6 == 0) {
+                NET_LUID luid;
+                ULONG winIndex = 0;
+
+                if (ConvertInterfaceNameToLuidA(local_addr_.c_str(), &luid) == NO_ERROR) {
+                    if (ConvertInterfaceLuidToIndex(&luid, &winIndex) == NO_ERROR) {
+                        ifindex6 = static_cast<unsigned int>(winIndex);
+                    }
+                }
+
+                if (ifindex6 == 0) {
+                    int wchars_num = MultiByteToWideChar(CP_UTF8, 0, local_addr_.c_str(), -1, NULL, 0);
+                    if (wchars_num > 0) {
+                        std::vector<wchar_t> wstr(wchars_num);
+                        MultiByteToWideChar(CP_UTF8, 0, local_addr_.c_str(), -1, wstr.data(), wchars_num);
+
+                        if (ConvertInterfaceAliasToLuid(wstr.data(), &luid) == NO_ERROR) {
+                            if (ConvertInterfaceLuidToIndex(&luid, &winIndex) == NO_ERROR) {
+                                ifindex6 = static_cast<unsigned int>(winIndex);
+                            }
+                        }
+                    }
+                }
+            }
+#endif // _WIN32
                 if (ifindex6 == 0) {
                     closeSocket();
                     if (waitedMs >= kSocketMaxTotalWaitMs) {

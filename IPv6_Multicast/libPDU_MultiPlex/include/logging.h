@@ -52,7 +52,7 @@ inline const char* nm_log_time() {
     return buf;
 }
 
-#if 0
+#if 1
 #define LOG_BASE(level, fmt, ...) std::fprintf(stdout, "%s %-5s %-20s: " fmt "\n", nm_log_time(), level, __FILE__, ##__VA_ARGS__)
 #else
 #define LOG_BASE(level, fmt, ...)
