@@ -1,7 +1,7 @@
 import { WebSocketServer, WebSocket, type RawData } from 'ws';
 import type { IncomingMessage } from 'node:http';
 import { FSG_SIMULATION_PORT } from '../../common/common.js';
-import { FsgRequestMapping } from '../fsg_mapping.js';
+import { globalFsgSimulationManager } from '../FsgSimulationManager.js';
 
 export class SocketHandler {
     private m_wss: WebSocketServer;
@@ -13,20 +13,12 @@ export class SocketHandler {
     public start() : void {
         this.m_wss.on('connection', (ws: WebSocket, request: IncomingMessage) => {
             console.log("new connection, client ip : ", request.socket.remoteAddress);
-            ws.send("hello world!!!");
 
             ws.on('message', (data: any) => {
                 console.log("received requests from client : ", request.socket.remoteAddress);
                 try {
                     const { targetId, payload } = JSON.parse(data.toString());
-                    const request_listener = FsgRequestMapping.get(targetId);
-                    if (request_listener) {
-                        if (Array.isArray(payload)) {
-                            request_listener(...payload);
-                        } else {
-                            request_listener(payload);
-                        }
-                    }
+                    globalFsgSimulationManager.handleHttpRequest(targetId, payload);
                 } catch (err) {
                     console.error("client request wrong format of data");
                 }

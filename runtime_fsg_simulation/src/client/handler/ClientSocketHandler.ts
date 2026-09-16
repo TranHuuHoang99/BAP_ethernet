@@ -23,7 +23,7 @@ class ClientSocketHandler {
 
     public sendRequest(payload: any): void {
         if (this.m_socket.readyState == WebSocket.OPEN) {
-            console.log("send request");
+            console.log("send request with payload : ", payload);
             this.m_socket.send(payload);
         } else {
             console.log("socket is not ready");
