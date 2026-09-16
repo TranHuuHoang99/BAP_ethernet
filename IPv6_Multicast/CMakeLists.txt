@@ -48,7 +48,11 @@ SET(BAPGEN_SRC
 )
 
 ### FSG server application sources ###
-file(GLOB FSG_APP_SOURCES "${FSG_SERVER_DIR}/src/*.cpp" "${FSG_SERVER_DIR}/src/*.c")
+file(GLOB FSG_APP_SOURCES
+    "${FSG_SERVER_DIR}/src/*.cpp"
+    "${FSG_SERVER_DIR}/src/*.c"
+    "${FSG_SERVER_DIR}/src/handler/*.cpp"
+)
 
 ### libPDU_MultiPlex sources ###
 file(GLOB PDU_LIB_SOURCES "${PDU_LIB_DIR}/src/*.cpp" "${PDU_LIB_DIR}/src/*.c")
@@ -74,6 +78,7 @@ include_directories(
     ${FSG_SERVER_DIR}/inc
     ${FSG_SERVER_DIR}/inc/common
     ${FSG_SERVER_DIR}/inc/log
+    ${FSG_SERVER_DIR}/inc/handler
     ### libPDU_MultiPlex ###
     ${PDU_LIB_DIR}/include
     ### Workspace root (for "IPv6_Multicast/..." relative includes) ###

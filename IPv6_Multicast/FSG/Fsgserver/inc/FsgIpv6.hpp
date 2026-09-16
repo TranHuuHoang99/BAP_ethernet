@@ -36,6 +36,7 @@ extern "C" {
 
 #include "PDUManager.h"
 #include "common/FsgDataBase.hpp"
+#include "HttpRequestHandler.hpp"
 
 const std::vector<lsgId_t> lsgId_vec = {
     lsgId_t::BapLsg_ClimateZone,
@@ -51,6 +52,7 @@ private:
     };
 
     void _waitBAPTasks(int32_t time_delay);
+    void _heartBeat(void);
     int32_t _initAllSendBuffers(const lsgId_t aLsgId);
 
     int32_t _initLsg(void);
@@ -61,6 +63,7 @@ private:
     void _sendInitialValue(void);
     void _genDataBase(void);
     int32_t _genDataFollowLsgId(const lsgId_t lsgId);
+    void _startHttpHandler(void);
 
 public:
     FsgIpv6(FsgIpv6::FsgIpv6Token) {}
@@ -102,14 +105,56 @@ public:
     int32_t stop(void);
     bool_t transmitTxData(ptr_t apData, const uint16_t au16MsgLength);
 
+    template<typename T>
+    const DataType<T> loadData(const lsgId_t lsgId, const fctId_t fctId)
+    {
+        if (m_dataBase == nullptr) {
+            std::cout << "database ptr is nullptr\n";
+            return DataType<T>{T{}, 0}; 
+        }
+
+        const auto q = m_dataBase->query<T>(lsgId, fctId);
+        return q;
+    }
+
+    template<typename T>
+    int32_t storeData(const lsgId_t lsgId, const fctId_t fctId, const DataType<T> newData)
+    {
+        if (m_dataBase == nullptr) {
+            std::cout << "database ptr is nullptr\n";
+            return -1;
+        }
+        return m_dataBase->write<T>(lsgId, fctId, newData);
+    }
+
+    /*
+        BAP API
+    */
+    void write_hvac_power_status(const uint8_t value);
+    void write_ac_compressor_status(const std::vector<uint8_t> payload);
+    void write_ac_compressor_eco_max(const std::vector<uint8_t> payload);
+    void write_hvac_temp_zl(const std::vector<uint8_t> payload);
+    void write_hvac_temp_zr(const std::vector<uint8_t> payload);
+    void write_hvac_fan_speed_zl(const std::vector<uint8_t> payload);
+    void write_hvac_fan_speed_zr(const std::vector<uint8_t> payload);
+    void write_rvc(const bool value);
+    void write_seat_climate_zl(const std::vector<uint8_t> payload);
+    void write_seat_climate_zr(const std::vector<uint8_t> payload);
+    void write_air_circ_manual(const std::vector<uint8_t> payload);
+    void write_air_dist_zl(const std::vector<uint8_t> payload);
+    void write_air_dist_zr(const std::vector<uint8_t> payload);
+
 private:
     std::unique_ptr<PDUManager> m_pduManager;
     std::unique_ptr<DataBase> m_dataBase;
+    std::shared_ptr<HttpRequestHandler> m_httpRequestHandler;
     std::mutex m_txMtx;
     std::mutex m_rxMtx;
     std::recursive_mutex m_bapMtx;
     std::recursive_mutex m_bapRecvMtx;
     std::queue<std::vector<uint8_t>> m_rxQueue;
+    std::atomic_bool m_bapRunning = false;
+    std::thread m_heartBeatThread;
 
 };
 

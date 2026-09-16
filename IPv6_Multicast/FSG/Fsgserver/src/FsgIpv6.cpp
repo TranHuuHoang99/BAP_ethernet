@@ -3,6 +3,7 @@
 #include <vector>
 #include <cstring>
 #include "palb_cfg_project.h"
+#include "BapParser.hpp"
 
 #define LSG_START_RETRY_INTERVAL_MS 1000
 #define TIMEOUT_AFTER_START_LSG 3000 
@@ -100,48 +101,6 @@ void FsgIpv6::indicationByteSequence(const lsgId_t aLsgId,
                   << (int32_t)(apValue[i]) << " ";
     }
     std::cout << '\n';
-
-    if (aLsgId == lsgId_t::BapLsg_ClimateZone &&
-        aFctId == fctId_t::BapFct_ClimateZone_ZL_Temperature)
-    {
-        if (aeIndication == BapIndication_t::BapInd_DataSetGet) {
-            std::vector<uint8_t> response(
-                const_cast<const uint8_t*>(apValue),
-                const_cast<const uint8_t*>(apValue) + au32Length
-            );
-            BAP_RequestByteSequence(aLsgId, aFctId,
-                                    BapRequest_t::BapReq_Data,
-                                    response.data(),
-                                    6);
-        } else if (aeIndication == BapIndication_t::BapInd_DataGet) {
-            std::vector<uint8_t> response(6, 0xFFu);
-            BAP_RequestByteSequence(aLsgId, aFctId,
-                                    BapRequest_t::BapReq_Data,
-                                    response.data(),
-                                    6);
-        }
-    }
-
-    if (aLsgId == lsgId_t::BapLsg_ClimateMaster &&
-        aFctId == fctId_t::BapFct_ClimateMaster_AC)
-    {
-        if (aeIndication == BapIndication_t::BapInd_DataSetGet) {
-            std::vector<uint8_t> response(
-                const_cast<const uint8_t*>(apValue),
-                const_cast<const uint8_t*>(apValue) + au32Length
-            );
-            BAP_RequestByteSequence(aLsgId, aFctId,
-                                    BapRequest_t::BapReq_Data,
-                                    response.data(),
-                                    2u);
-        } else if (aeIndication == BapIndication_t::BapInd_DataGet) {
-            std::vector<uint8_t> response(6, 0xFFu);
-            BAP_RequestByteSequence(aLsgId, aFctId,
-                                    BapRequest_t::BapReq_Data,
-                                    response.data(),
-                                    2u);
-        }
-    }
 }
 
 void FsgIpv6::indicationError(const lsgId_t aLsgId,
@@ -198,6 +157,9 @@ int32_t FsgIpv6::init(void)
                 _onPduReceived(pdu);
             });
         }
+
+        m_httpRequestHandler = std::make_shared<HttpRequestHandler>();
+        m_dataBase = std::make_unique<DataBase>();
     } catch (const std::bad_alloc& err) {
         std::cerr << "failed to allocate pdu manager\n";
         return -1;
@@ -239,7 +201,10 @@ void FsgIpv6::start(void)
     _genDataBase();
     _sendInitialValue();
 
-    while (true) {
+    m_bapRunning.store(true);
+    _heartBeat();
+    _startHttpHandler();
+    while (m_bapRunning.load()) {
         _waitBAPTasks(1);
     }
 
@@ -249,6 +214,11 @@ void FsgIpv6::start(void)
 int32_t FsgIpv6::stop(void)
 {
     std::cout << "[SERVER][STOP] stop FSG server !!!\n";
+    m_bapRunning.store(false);
+    if (m_httpRequestHandler != nullptr) m_httpRequestHandler->stop();
+    if (m_heartBeatThread.joinable()) {
+        m_heartBeatThread.join();
+    }
     return 0;
 }
 
@@ -271,6 +241,22 @@ void FsgIpv6::_waitBAPTasks(int32_t time_delay)
         usleep(1);
 #endif // defined(__CYGWIN__) || defined(WIN32)
     }
+}
+
+void FsgIpv6::_heartBeat(void)
+{
+    m_heartBeatThread = std::thread([&](void) -> void {
+        while (m_bapRunning.load()) {
+            for (const lsgId_t lsgId : lsgId_vec) {
+                BAP_RequestInt8(lsgId, (fctId_t)4, BapRequest_t::BapReq_Data, 0x0A);
+            }
+#if defined(__CYGWIN__) || defined(WIN32)
+            Sleep(1000);
+#else
+            usleep(1);
+#endif // defined(__CYGWIN__) || defined(WIN32)
+        }
+    });
 }
 
 bool_t FsgIpv6::transmitTxData(ptr_t apData, const uint16_t au16MsgLength)
@@ -457,12 +443,12 @@ int32_t FsgIpv6::_stopLsg(void)
 void FsgIpv6::_sendInitialValue(void)
 {
     std::cout << "[SERVER] sending initial value to ASG\n";
-    const std::vector<uint8_t> payload = {0u, 0u, 0u, 0u, 0u, 0u};
-    BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateZone,
-                            fctId_t::BapFct_ClimateZone_ZL_Temperature,
-                            BapRequest_t::BapReq_Data,
-                            payload.data(),
-                            6);
+    const std::shared_ptr<BapParser> parser = BapParser::instance();
+    if (parser == nullptr) {
+        std::cerr << "[SERVER] parser is nullptr\n";
+        return;
+    }
+    parser->load_initial_vals();
 }
 
 void FsgIpv6::_genDataBase(void)
@@ -575,3 +561,129 @@ int32_t FsgIpv6::_genDataFollowLsgId(const lsgId_t lsgId)
     return firstErr;
 }
 
+void FsgIpv6::_startHttpHandler(void)
+{
+    if (m_httpRequestHandler == nullptr) {
+        std::cerr << "[SERVER] m_httpRequestHandler is nullptr\n";
+        return;
+    }
+    m_httpRequestHandler->start();
+}
+
+void FsgIpv6::write_hvac_power_status(const uint8_t value)
+{
+    const BapError_t ret = BAP_RequestInt8(lsgId_t::BapLsg_ClimateZone,
+                                           fctId_t::BapFct_ClimateZone_FSG_Control,
+                                           BapRequest_t::BapReq_Data,
+                                           value);
+    if (ret != BapError_t::BapErr_OK) {
+        std::cerr << "[WRITE] failed to request bap hvac power\n";
+    }
+}
+
+void FsgIpv6::write_ac_compressor_status(const std::vector<uint8_t> payload)
+{
+    const BapError_t ret = BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateMaster,
+                                                   fctId_t::BapFct_ClimateMaster_AC,
+                                                   BapRequest_t::BapReq_Data,
+                                                   payload.data(),
+                                                   payload.size());
+}
+
+void FsgIpv6::write_ac_compressor_eco_max(const std::vector<uint8_t> payload)
+{
+    const BapError_t ret = BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateMaster,
+                                                   fctId_t::BapFct_ClimateMaster_AC,
+                                                   BapRequest_t::BapReq_Data,
+                                                   payload.data(),
+                                                   payload.size());
+}
+
+void FsgIpv6::write_hvac_temp_zl(const std::vector<uint8_t> payload)
+{
+    const BapError_t ret = BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateZone,
+                                                   fctId_t::BapFct_ClimateZone_ZL_Temperature,
+                                                   BapRequest_t::BapReq_Data,
+                                                   payload.data(),
+                                                   payload.size());
+}
+
+void FsgIpv6::write_hvac_temp_zr(const std::vector<uint8_t> payload)
+{
+    const BapError_t ret = BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateZone,
+                                                   fctId_t::BapFct_ClimateZone_ZR_Temperature,
+                                                   BapRequest_t::BapReq_Data,
+                                                   payload.data(),
+                                                   payload.size());
+}
+
+void FsgIpv6::write_hvac_fan_speed_zl(const std::vector<uint8_t> payload)
+{
+    const BapError_t ret = BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateZone,
+                                                   fctId_t::BapFct_ClimateZone_ZL_AirVolume,
+                                                   BapRequest_t::BapReq_Data,
+                                                   payload.data(),
+                                                   payload.size());
+}
+
+void FsgIpv6::write_hvac_fan_speed_zr(const std::vector<uint8_t> payload)
+{
+    const BapError_t ret = BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateZone,
+                                                   fctId_t::BapFct_ClimateZone_ZR_AirVolume,
+                                                   BapRequest_t::BapReq_Data,
+                                                   payload.data(),
+                                                   payload.size());
+}
+
+void FsgIpv6::write_rvc(const bool value)
+{
+
+}
+
+void FsgIpv6::write_seat_climate_zl(const std::vector<uint8_t> payload)
+{
+    const BapError_t ret = BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateZone,
+                                                   fctId_t::BapFct_ClimateZone_ZL_SeatClimate,
+                                                   BapRequest_t::BapReq_Data,
+                                                   payload.data(),
+                                                   payload.size());
+    if (ret != BapError_t::BapErr_OK) {
+        std::cerr << "[WRITE] failed to send seat climate zl\n";
+    }
+}
+
+void FsgIpv6::write_seat_climate_zr(const std::vector<uint8_t> payload)
+{
+    const BapError_t ret = BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateZone,
+                                                   fctId_t::BapFct_ClimateZone_ZR_SeatClimate,
+                                                   BapRequest_t::BapReq_Data,
+                                                   payload.data(),
+                                                   payload.size());
+}
+
+void FsgIpv6::write_air_circ_manual(const std::vector<uint8_t> payload)
+{
+    const BapError_t ret = BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateMaster,
+                                                   fctId_t::BapFct_ClimateMaster_AirCirculation,
+                                                   BapRequest_t::BapReq_Data,
+                                                   payload.data(),
+                                                   payload.size());
+}
+
+void FsgIpv6::write_air_dist_zl(const std::vector<uint8_t> payload)
+{
+    const BapError_t ret = BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateZone,
+                                                   fctId_t::BapFct_ClimateZone_ZL_AirDistribution,
+                                                   BapRequest_t::BapReq_Data,
+                                                   payload.data(),
+                                                   payload.size());
+}
+
+void FsgIpv6::write_air_dist_zr(const std::vector<uint8_t> payload)
+{
+    const BapError_t ret = BAP_RequestByteSequence(lsgId_t::BapLsg_ClimateZone,
+                                                   fctId_t::BapFct_ClimateZone_ZR_AirDistribution,
+                                                   BapRequest_t::BapReq_Data,
+                                                   payload.data(),
+                                                   payload.size());
+}
