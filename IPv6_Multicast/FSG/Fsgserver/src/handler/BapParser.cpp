@@ -17,10 +17,37 @@ BapParser::~BapParser(void)
 void BapParser::load_initial_vals(void)
 {
     encode_hvac_power(http::hvac_power_status);
+    encode_ac_compressor_status(http::ac_compressor_status,
+                                http::ac_modification_state,
+                                http::ac_modifcation_reason);
+    encode_ac_compressor_eco_max(http::ac_compressor_eco_max,
+                                 http::ac_modification_state,
+                                 http::ac_modifcation_reason);
+    encode_temp_zl(http::zl_temp_value,
+                   http::zl_temp_unit,
+                   http::zl_temp_modification_state,
+                   http::zl_temp_modification_reason);
+    encode_temp_zl(http::zr_temp_value,
+                   http::zr_temp_unit,
+                   http::zr_temp_modification_state,
+                   http::zr_temp_modification_reason);
+    encode_fan_speed_zl(http::zl_air_volume,
+                        http::zl_air_volume_modification_state,
+                        http::zl_air_volume_modification_reason);
+    encode_fan_speed_zl(http::zr_air_volume,
+                        http::zr_air_volume_modification_state,
+                        http::zr_air_volume_modification_reason);
     encode_seat_climate_zl(http::zl_seat_climate_heat_value,
                            http::zl_seat_climate_heat_state,
                            http::zl_seat_climate_ventilation_value,
                            http::zl_seat_climate_ventilation_state);
+    encode_seat_climate_zr(http::zr_seat_climate_heat_value,
+                           http::zr_seat_climate_heat_state,
+                           http::zr_seat_climate_ventilation_value,
+                           http::zr_seat_climate_ventilation_state);
+    encode_air_circulation_manual(http::air_circulation_manual_state);
+    encode_air_distribution_zl(http::zl_air_distribution_state);
+    encode_air_distribution_zr(http::zr_air_distribution_state);
 }
 
 void BapParser::encode_hvac_power(const bool cmd)
@@ -130,6 +157,7 @@ void BapParser::encode_ac_compressor_status(const bool status,
         fctId_t::BapFct_ClimateMaster_AC,
         {data, len}
     );
+    fsg->write_ac_compressor_status(data);
 }
 
 void BapParser::encode_ac_compressor_eco_max(const bool status,
@@ -185,6 +213,7 @@ void BapParser::encode_ac_compressor_eco_max(const bool status,
         fctId_t::BapFct_ClimateMaster_AC,
         {data, len}
     );
+    fsg->write_ac_compressor_eco_max(data);
 }
 
 void BapParser::encode_temp_zl(const float32_t value,
@@ -211,7 +240,7 @@ void BapParser::encode_temp_zl(const float32_t value,
         lsgId_t::BapLsg_ClimateZone,
         fctId_t::BapFct_ClimateZone_ZL_Temperature
     );
-    const uint8_t temp_cel = (uint8_t)((value - 10.0) / 0.1f);
+    const uint8_t temp_cel = static_cast<uint8_t>(std::round((value - 10.0f) / 0.1f));
     const uint8_t unit_type = (uint8_t)(unit);
     data[0] = temp_cel;
     data[1] = unit_type;
@@ -234,6 +263,7 @@ void BapParser::encode_temp_zl(const float32_t value,
         fctId_t::BapFct_ClimateZone_ZL_Temperature,
         {data, len}
     );
+    fsg->write_hvac_temp_zl(data);
 }
 
 void BapParser::encode_temp_zr(const float32_t value,
@@ -260,7 +290,7 @@ void BapParser::encode_temp_zr(const float32_t value,
         lsgId_t::BapLsg_ClimateZone,
         fctId_t::BapFct_ClimateZone_ZR_Temperature
     );
-    const uint8_t temp_cel = (uint8_t)((value - 10.0) / 0.1f);
+    const uint8_t temp_cel = static_cast<uint8_t>(std::round((value - 10.0f) / 0.1f));
     const uint8_t unit_type = (uint8_t)(unit);
     data[0] = temp_cel;
     data[1] = unit_type;
@@ -283,6 +313,7 @@ void BapParser::encode_temp_zr(const float32_t value,
         fctId_t::BapFct_ClimateZone_ZR_Temperature,
         {data, len}
     );
+    fsg->write_hvac_temp_zr(data);
 }
 
 void BapParser::encode_fan_speed_zl(const int32_t value,
@@ -331,6 +362,7 @@ void BapParser::encode_fan_speed_zl(const int32_t value,
         fctId_t::BapFct_ClimateZone_ZL_AirVolume,
         {data, len}
     );
+    fsg->write_hvac_fan_speed_zl(data);
 }
 
 void BapParser::encode_fan_speed_zr(const int32_t value,
@@ -376,6 +408,7 @@ void BapParser::encode_fan_speed_zr(const int32_t value,
         fctId_t::BapFct_ClimateZone_ZR_AirVolume,
         {data, len}
     );
+    fsg->write_hvac_fan_speed_zr(data);
 }
 
 void BapParser::encode_rvc(const bool status)
@@ -473,7 +506,7 @@ void BapParser::encode_seat_climate_zr(const int32_t heat_val,
     for (int32_t i = 0; i < (len + 6u - 1u) / 6u; i++) {
         auto it_start = data.begin() + (i * 6u);
         auto it_end = (it_start + 6u > data.end()) ? data.end() : (it_start + 6u);
-        // fsg->write_seat_climate_zr(std::vector<uint8_t>(it_start, it_end));
+        fsg->write_seat_climate_zr(std::vector<uint8_t>(it_start, it_end));
     }
 }
 
@@ -508,6 +541,7 @@ void BapParser::encode_air_circulation_manual(const bool value)
         fctId_t::BapFct_ClimateMaster_AirCirculation,
         {data, len}
     );
+    fsg->write_air_circ_manual(data);
 }
 
 void BapParser::encode_air_distribution_zl(const int32_t value)
@@ -558,6 +592,7 @@ void BapParser::encode_air_distribution_zl(const int32_t value)
         fctId_t::BapFct_ClimateZone_ZL_AirDistribution,
         {data, len}
     );
+    fsg->write_air_dist_zl(data);
 }
 
 void BapParser::encode_air_distribution_zr(const int32_t value)
@@ -608,4 +643,5 @@ void BapParser::encode_air_distribution_zr(const int32_t value)
         fctId_t::BapFct_ClimateZone_ZR_AirDistribution,
         {data, len}
     );
+    fsg->write_air_dist_zr(data);
 }

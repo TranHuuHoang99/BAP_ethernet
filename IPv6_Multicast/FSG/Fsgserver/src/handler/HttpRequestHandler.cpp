@@ -290,7 +290,16 @@ void HttpRequestHandler::start(void)
                         1 byte for ac compressor modification state
                         1 byte for ac compressor modification reason
                     */
-                    requiredSize = 4u;
+                    uint8_t status_temp = 0u;
+                    std::memcpy(&status_temp, buffer+1, sizeof(uint8_t));
+                    const bool status = (status_temp != 0u);
+                    uint8_t modi_state_temp = 0u;
+                    std::memcpy(&modi_state_temp, buffer+2, sizeof(uint8_t));
+                    const bool modi_state = (modi_state_temp != 0u);
+                    uint8_t modi_reason_temp = 0u;
+                    std::memcpy(&modi_reason_temp, buffer+3, sizeof(uint8_t));
+                    const int32_t modi_reason = static_cast<int32_t>(modi_reason_temp);
+                    parser->encode_ac_compressor_status(status, modi_state, modi_reason);
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_AC_COMPRESSOR_ECO_MAX):
@@ -301,31 +310,62 @@ void HttpRequestHandler::start(void)
                         1 byte for ac compressor modification state
                         1 byte for ac compressor modification reason
                     */
-                    requiredSize = 4u;
+                    uint8_t mode_temp = 0u;
+                    std::memcpy(&mode_temp, buffer+1, sizeof(uint8_t));
+                    const bool mode = (mode_temp != 0u);
+                    uint8_t modi_state_temp = 0u;
+                    std::memcpy(&modi_state_temp, buffer+2, sizeof(uint8_t));
+                    const bool modi_state = (modi_state_temp != 0u);
+                    uint8_t modi_reason_temp = 0u;
+                    std::memcpy(&modi_reason_temp, buffer+3, sizeof(uint8_t));
+                    const int32_t modi_reason = static_cast<int32_t>(modi_reason_temp);
+                    parser->encode_ac_compressor_status(mode, modi_state, modi_reason);
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_HVAC_TEMP_ZL):
                 {
                     /*
                         1 byte for ID
-                        1 byte for temp
+                        4 byte for temp
                         1 byte for unit
                         1 byte for ac compressor modification state
                         1 byte for ac compressor modification reason
                     */
-                    requiredSize = 5u;
+                    float32_t temperature = 0.0f;
+                    std::memcpy(&temperature, buffer+1, sizeof(float32_t));
+                    uint8_t unit_temp = 0u;
+                    std::memcpy(&unit_temp, buffer+5, sizeof(uint8_t));
+                    const int32_t unit = static_cast<int32_t>(unit_temp);
+                    uint8_t modi_state_temp = 0u;
+                    std::memcpy(&modi_state_temp, buffer+6, sizeof(uint8_t));
+                    const bool modi_state = (modi_state_temp != 0u);
+                    uint8_t modi_reason_temp = 0u;
+                    std::memcpy(&modi_reason_temp, buffer+7, sizeof(uint8_t));
+                    const int32_t modi_reason = static_cast<int32_t>(modi_reason_temp);
+                    parser->encode_temp_zl(temperature, unit, modi_state, modi_reason);
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_HVAC_TEMP_ZR):
                 {
                     /*
                         1 byte for ID
-                        1 byte for temp
+                        4 byte for temp
                         1 byte for unit
                         1 byte for ac compressor modification state
                         1 byte for ac compressor modification reason
                     */
-                    requiredSize = 5u;
+                    float32_t temperature = 0.0f;
+                    std::memcpy(&temperature, buffer+1, sizeof(float32_t));
+                    uint8_t unit_temp = 0u;
+                    std::memcpy(&unit_temp, buffer+5, sizeof(uint8_t));
+                    const int32_t unit = static_cast<int32_t>(unit_temp);
+                    uint8_t modi_state_temp = 0u;
+                    std::memcpy(&modi_state_temp, buffer+6, sizeof(uint8_t));
+                    const bool modi_state = (modi_state_temp != 0u);
+                    uint8_t modi_reason_temp = 0u;
+                    std::memcpy(&modi_reason_temp, buffer+7, sizeof(uint8_t));
+                    const int32_t modi_reason = static_cast<int32_t>(modi_reason_temp);
+                    parser->encode_temp_zr(temperature, unit, modi_state, modi_reason);
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_HVAC_FAN_SPEED_ZL):
@@ -336,7 +376,16 @@ void HttpRequestHandler::start(void)
                         1 byte for ac compressor modification state
                         1 byte for ac compressor modification reason
                     */
-                    requiredSize = 4u;
+                    uint8_t volume_temp = 0u;
+                    std::memcpy(&volume_temp, buffer+1, sizeof(uint8_t));
+                    const int32_t volume = static_cast<int32_t>(volume_temp);
+                    uint8_t modi_state_temp = 0u;
+                    std::memcpy(&modi_state_temp, buffer+2, sizeof(uint8_t));
+                    const bool modi_state = (modi_state_temp != 0u);
+                    uint8_t modi_reason_temp = 0u;
+                    std::memcpy(&modi_reason_temp, buffer+3, sizeof(uint8_t));
+                    const int32_t modi_reason = static_cast<int32_t>(modi_reason_temp);
+                    parser->encode_fan_speed_zl(volume, modi_state, modi_reason);
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_HVAC_FAN_SPEED_ZR):
@@ -347,13 +396,23 @@ void HttpRequestHandler::start(void)
                         1 byte for ac compressor modification state
                         1 byte for ac compressor modification reason
                     */
-                    requiredSize = 4u;
+                    uint8_t volume_temp = 0u;
+                    std::memcpy(&volume_temp, buffer+1, sizeof(uint8_t));
+                    const int32_t volume = static_cast<int32_t>(volume_temp);
+                    uint8_t modi_state_temp = 0u;
+                    std::memcpy(&modi_state_temp, buffer+2, sizeof(uint8_t));
+                    const bool modi_state = (modi_state_temp != 0u);
+                    uint8_t modi_reason_temp = 0u;
+                    std::memcpy(&modi_reason_temp, buffer+3, sizeof(uint8_t));
+                    const int32_t modi_reason = static_cast<int32_t>(modi_reason_temp);
+                    parser->encode_fan_speed_zr(volume, modi_state, modi_reason);
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_RVC):
                 {
                     // 1 byte ID + rvc cmd
                     requiredSize = 2u;
+                    std::cout << "Not yet support\n";
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_SEAT_CLIMATE_ZL):
@@ -365,7 +424,24 @@ void HttpRequestHandler::start(void)
                         1 byte for seat climate ventilation state
                         1 byte for seat climate ventilation value
                     */
-                    requiredSize = 5u;
+                    uint8_t heat_state_temp = 0u;
+                    std::memcpy(&heat_state_temp, buffer+1, sizeof(uint8_t));
+                    const int32_t heat_state = static_cast<int32_t>(heat_state_temp);
+                    uint8_t heat_value_temp = 0u;
+                    std::memcpy(&heat_value_temp, buffer+2, sizeof(uint8_t));
+                    const int32_t heat_value = static_cast<int32_t>(heat_value_temp);
+                    uint8_t ventilation_state_temp = 0u;
+                    std::memcpy(&ventilation_state_temp, buffer+3, sizeof(uint8_t));
+                    const int32_t ventilation_state = static_cast<int32_t>(ventilation_state_temp);
+                    uint8_t ventilation_value_temp = 0u;
+                    std::memcpy(&ventilation_value_temp, buffer+4, sizeof(uint8_t));
+                    const int32_t ventilation_value = static_cast<int32_t>(ventilation_value_temp);
+                    parser->encode_seat_climate_zl(
+                        heat_value,
+                        heat_state,
+                        ventilation_value,
+                        ventilation_state
+                    );
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_SEAT_CLIMATE_ZR):
@@ -377,7 +453,24 @@ void HttpRequestHandler::start(void)
                         1 byte for seat climate ventilation state
                         1 byte for seat climate ventilation value
                     */
-                    requiredSize = 5u;
+                    uint8_t heat_state_temp = 0u;
+                    std::memcpy(&heat_state_temp, buffer+1, sizeof(uint8_t));
+                    const int32_t heat_state = static_cast<int32_t>(heat_state_temp);
+                    uint8_t heat_value_temp = 0u;
+                    std::memcpy(&heat_value_temp, buffer+2, sizeof(uint8_t));
+                    const int32_t heat_value = static_cast<int32_t>(heat_value_temp);
+                    uint8_t ventilation_state_temp = 0u;
+                    std::memcpy(&ventilation_state_temp, buffer+3, sizeof(uint8_t));
+                    const int32_t ventilation_state = static_cast<int32_t>(ventilation_state_temp);
+                    uint8_t ventilation_value_temp = 0u;
+                    std::memcpy(&ventilation_value_temp, buffer+4, sizeof(uint8_t));
+                    const int32_t ventilation_value = static_cast<int32_t>(ventilation_value_temp);
+                    parser->encode_seat_climate_zr(
+                        heat_value,
+                        heat_state,
+                        ventilation_value,
+                        ventilation_state
+                    );
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_AIR_CIRC_MANUAL):
@@ -386,7 +479,10 @@ void HttpRequestHandler::start(void)
                         1 byte for ID
                         1 byte for air circulation manual cmd
                     */
-                    requiredSize = 2u;
+                    uint8_t circ_manual_temp = 0u;
+                    std::memcpy(&circ_manual_temp, buffer+1, sizeof(uint8_t));
+                    const bool circ_manual = (circ_manual_temp != 0u);
+                    parser->encode_air_circulation_manual(circ_manual);
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_AIR_DIST_ZL):
@@ -395,7 +491,12 @@ void HttpRequestHandler::start(void)
                         1 byte for ID
                         1 byte for air distribution state
                     */
-                    requiredSize = 2u;
+                    uint8_t distribution_state_temp = 0u;
+                    std::memcpy(&distribution_state_temp, buffer+1, sizeof(uint8_t));
+                    const int32_t distribution_state = static_cast<int32_t>(
+                        distribution_state_temp
+                    );
+                    parser->encode_air_distribution_zl(distribution_state);
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_AIR_DIST_ZR):
@@ -404,7 +505,12 @@ void HttpRequestHandler::start(void)
                         1 byte for ID
                         1 byte for air distribution state
                     */
-                    requiredSize = 2u;
+                    uint8_t distribution_state_temp = 0u;
+                    std::memcpy(&distribution_state_temp, buffer+1, sizeof(uint8_t));
+                    const int32_t distribution_state = static_cast<int32_t>(
+                        distribution_state_temp
+                    );
+                    parser->encode_air_distribution_zr(distribution_state);
                     break;
                 }
                 default:

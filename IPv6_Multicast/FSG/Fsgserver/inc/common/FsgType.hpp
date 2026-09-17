@@ -18,6 +18,7 @@
 #include <queue>
 #include <atomic>
 #include <cstring>
+#include <cmath>
 #include "fsg_log.hpp"
 
 extern "C" {

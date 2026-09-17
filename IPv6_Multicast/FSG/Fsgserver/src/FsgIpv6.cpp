@@ -236,7 +236,7 @@ void FsgIpv6::_waitBAPTasks(int32_t time_delay)
         }
         _tickBap();
 #if defined(__CYGWIN__) || defined(WIN32)
-        Sleep(1000);
+        Sleep(200);
 #else
         usleep(1);
 #endif // defined(__CYGWIN__) || defined(WIN32)
