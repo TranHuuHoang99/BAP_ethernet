@@ -68,7 +68,14 @@ public:
     // void decode_fan_speed_zr
 
     void encode_rvc(const bool status);
-    // void decode_rvc
+    // void 
+    
+    void encode_tire_pressure(const int32_t unit,
+                              const float32_t value_fl,
+                              const float32_t value_fr,
+                              const float32_t value_rl,
+                              const float32_t value_rr);
+    // void decode_tire_pressure
 
     void encode_seat_climate_zl(const int32_t heat_val,
                                 const int32_t heat_state,

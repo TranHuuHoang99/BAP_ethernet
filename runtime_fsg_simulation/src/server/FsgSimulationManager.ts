@@ -111,6 +111,11 @@ class FsgSimulationManager {
             }
             case ComponentIndex_t.MODIFY_TIRE_PRESSURE:
             {
+                if (payload.length < 5) {
+                    console.error("tire pressure payload length error");
+                    break;
+                }
+                this._changeTirePressure(payload[0], payload[1], payload[2], payload[3], payload[4]);
                 break;
             }
             case ComponentIndex_t.MODIFY_SEAT_CLIMATE_ZL:
@@ -283,6 +288,25 @@ class FsgSimulationManager {
     private _changeRvc(status: boolean): void
     {
 
+    }
+
+    private _changeTirePressure(unit: number,
+                                value_fl: number,
+                                value_fr: number,
+                                value_rl: number,
+                                value_rr: number)
+    {
+        const buffer = new ArrayBuffer(18);
+        const view = new DataView(buffer);
+        view.setUint8(1, unit);
+        view.setFloat32(2, value_fl, true);
+        view.setFloat32(6, value_fr, true);
+        view.setFloat32(10, value_rl, true);
+        view.setFloat32(14, value_rr, true);
+        const payload = new Uint8Array(buffer);
+        payload[0] = HttpRequest_t.MODIFY_TIRE_PRESSURE;
+        console.log("tire pressure payload : ", payload);
+        this.m_simulationHandler.executeRequest(payload);
     }
 
     private _changeSeatClimateZL(heat_val: number,

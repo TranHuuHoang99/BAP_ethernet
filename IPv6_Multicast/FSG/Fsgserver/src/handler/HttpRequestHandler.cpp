@@ -140,24 +140,24 @@ void HttpRequestHandler::start(void)
                             {
                                 /*
                                     1 byte for ID
-                                    1 byte for temp
+                                    4 byte for temp
                                     1 byte for unit
                                     1 byte for ac compressor modification state
                                     1 byte for ac compressor modification reason
                                 */
-                                requiredSize = 5u;
+                                requiredSize = 8u;
                                 break;
                             }
                             case static_cast<uint8_t>(httpReq::MODIFY_HVAC_TEMP_ZR):
                             {
                                 /*
                                     1 byte for ID
-                                    1 byte for temp
+                                    4 byte for temp
                                     1 byte for unit
                                     1 byte for ac compressor modification state
                                     1 byte for ac compressor modification reason
                                 */
-                                requiredSize = 5u;
+                                requiredSize = 8u;
                                 break;
                             }
                             case static_cast<uint8_t>(httpReq::MODIFY_HVAC_FAN_SPEED_ZL):
@@ -186,6 +186,19 @@ void HttpRequestHandler::start(void)
                             {
                                 // 1 byte ID + rvc cmd
                                 requiredSize = 2u;
+                                break;
+                            }
+                            case static_cast<uint8_t>(httpReq::MODIFY_TIRE_PRESSURE):
+                            {
+                                /*
+                                    1 byte for ID
+                                    1 byte for unit
+                                    4 byte for tire pressure FL
+                                    4 byte for tire pressure FR
+                                    4 byte for tire pressure RL
+                                    4 byte for tire pressure RR
+                                */
+                                requiredSize = 18u;
                                 break;
                             }
                             case static_cast<uint8_t>(httpReq::MODIFY_SEAT_CLIMATE_ZL):
@@ -413,8 +426,37 @@ void HttpRequestHandler::start(void)
                 case static_cast<uint8_t>(httpReq::MODIFY_RVC):
                 {
                     // 1 byte ID + rvc cmd
-                    requiredSize = 2u;
                     std::cout << "Not yet support\n";
+                    break;
+                }
+                case static_cast<uint8_t>(httpReq::MODIFY_TIRE_PRESSURE):
+                {
+                    /*
+                        1 byte for ID
+                        1 byte for unit
+                        4 byte for tire pressure FL
+                        4 byte for tire pressure FR
+                        4 byte for tire pressure RL
+                        4 byte for tire pressure RR
+                    */
+                    uint8_t unit_temp = 0u;
+                    std::memcpy(&unit_temp, buffer+1, sizeof(uint8_t));
+                    const int32_t unit = static_cast<int32_t>(unit_temp);
+                    float32_t value_fl = 0.0f;
+                    std::memcpy(&value_fl, buffer+2, sizeof(float32_t));
+                    float32_t value_fr = 0.0f;
+                    std::memcpy(&value_fr, buffer+6, sizeof(float32_t));
+                    float32_t value_rl = 0.0f;
+                    std::memcpy(&value_rl, buffer+10, sizeof(float32_t));
+                    float32_t value_rr = 0.0f;
+                    std::memcpy(&value_rr, buffer+14, sizeof(float32_t));
+                    parser->encode_tire_pressure(
+                        unit_temp,
+                        value_fl,
+                        value_fr,
+                        value_rl,
+                        value_rr
+                    );
                     break;
                 }
                 case static_cast<uint8_t>(httpReq::MODIFY_SEAT_CLIMATE_ZL):

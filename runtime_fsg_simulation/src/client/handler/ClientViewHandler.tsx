@@ -20,7 +20,15 @@ export function HealthCheck() {
     const buttonText = isRunning ? "ON" : "OFF";
     const buttonColor = isRunning ? "#4CAF50" : "#ffffff";
     return (
-        <div style={{ fontFamily: 'Arial, sans-serif' }}>
+        <div style={{
+            fontFamily: 'Arial, sans-serif',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%',
+            textAlign: 'center'
+        }}>
             <h4>HEALTH CHECK</h4>
             <div>
                 <div>
@@ -591,6 +599,127 @@ export function FanSpeedZR() {
     )
 }
 
+export function TirePressure() {
+    const [unit, setUnit] = React.useState<number>(0);
+    const [value_fl, setValueFL] = React.useState<number>(0.0);
+    const [value_fr, setValueFR] = React.useState<number>(0.0);
+    const [value_rl, setValueRL] = React.useState<number>(0.0);
+    const [value_rr, setValueRR] = React.useState<number>(0.0);
+    React.useEffect(() => {
+        const onDataComes = (_unit: number,
+                             _fl: number,
+                             _fr: number,
+                             _rl: number,
+                             _rr: number) =>
+        {
+            setUnit(_unit);
+            setValueFL(_fl);
+            setValueFR(_fr);
+            setValueRL(_rl);
+            setValueRR(_rr);
+        }
+        globalClientRequestHandler.subcribe(ComponentIndex_t.MODIFY_TIRE_PRESSURE, onDataComes);
+        return () => {
+            globalClientRequestHandler.unsubcribe(ComponentIndex_t.MODIFY_TIRE_PRESSURE);
+        }
+    }, []);
+
+    let unitOption = Array.from({length:3}, (_, i) => i);
+    const valBAR = Array.from({length:64}, (_, i) => Number(i * 0.1).toFixed(1));
+    const valPSI = Array.from({length:64}, (_, i) => i * 1.0);
+    const valKPA = Array.from({length:64}, (_, i) => i * 10.0);
+    const curValOption = unit === 0 ? valBAR : unit === 1 ? valPSI : valKPA;
+    const unitNames = ["BAR", "PSI", "KPA"];
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        globalClientRequestHandler.handleRequest(
+            ComponentIndex_t.MODIFY_TIRE_PRESSURE,
+            unit,
+            value_fl,
+            value_fr,
+            value_rl,
+            value_rr
+        )
+    };
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <h4>TIRE PRESSURE</h4>
+                <div style={{display: 'flex', gap: '20px'}}>
+                    <div>
+                        <div><label>UNIT</label></div>
+                        <select
+                            id='tire-pressure-unit-select'
+                            name='tire-pressure-unit'
+                            value={unit.toString()}
+                            onChange={(e) => {setUnit(Number(e.target.value));}}
+                        >
+                            {unitOption.map((unit_val) => (
+                                <option key={unit_val} value={unit_val}>
+                                    {unitNames[unit_val]} | {unit_val}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>VALUE FRONT LEFT</label></div>
+                        <select
+                            id='tire-pressure-fl-select'
+                            name='tire-pressure-fl'
+                            value={value_fl.toString()}
+                            onChange={(e) => {setValueFL(Number(e.target.value));}}
+                        >
+                            {curValOption.map((val_fl) => (
+                                <option key={val_fl} value={val_fl}>{val_fl}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>VALUE FRONT RIGHT</label></div>
+                        <select
+                            id='tire-pressure-fr-select'
+                            name='tire-pressure-fr'
+                            value={value_fr.toString()}
+                            onChange={(e) => {setValueFR(Number(e.target.value));}}
+                        >
+                            {curValOption.map((val_fr) => (
+                                <option key={val_fr} value={val_fr}>{val_fr}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>VALUE REAR LEFT</label></div>
+                        <select
+                            id='tire-pressure-rl-select'
+                            name='tire-pressure-rl'
+                            value={value_rl.toString()}
+                            onChange={(e) => {setValueRL(Number(e.target.value));}}
+                        >
+                            {curValOption.map((val_rl) => (
+                                <option key={val_rl} value={val_rl}>{val_rl}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>VALUE REAR RIGHT</label></div>
+                        <select
+                            id='tire-pressure-rr-select'
+                            name='tire-pressure-rr'
+                            value={value_rr.toString()}
+                            onChange={(e) => {setValueRR(Number(e.target.value));}}
+                        >
+                            {curValOption.map((val_rr) => (
+                                <option key={val_rr} value={val_rr}>{val_rr}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button style={{marginTop: '6px'}} type='submit'>SEND</button>
+        </form>
+    )
+}
+
 export function SeatClimateZL() {
     const [heat_val, setHeatVal] = React.useState<number>(0);
     const [heat_state, setHeatState] = React.useState<number>(0);
@@ -678,7 +807,7 @@ export function SeatClimateZL() {
                             id='ven-state-left-select'
                             name='ven-state-left'
                             value={ven_state.toString()}
-                            onChange={(e) => setHeatState(Number(e.target.value))}
+                            onChange={(e) => setVenState(Number(e.target.value))}
                         >
                             {venStateOption.map((ven_state_t) => (
                                 <option key={ven_state_t} value={ven_state_t}>{ven_state_t}</option>
@@ -779,10 +908,157 @@ export function SeatClimateZR() {
                             id='ven-state-right-select'
                             name='ven-state-right'
                             value={ven_state.toString()}
-                            onChange={(e) => setHeatState(Number(e.target.value))}
+                            onChange={(e) => setVenState(Number(e.target.value))}
                         >
                             {venStateOption.map((ven_state_t) => (
                                 <option key={ven_state_t} value={ven_state_t}>{ven_state_t}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button style={{marginTop: '6px'}} type='submit'>SEND</button>
+        </form>
+    )
+}
+
+export function AirCirculationManual() {
+    const [air_pos, setAirPos] = React.useState<number>(0);
+
+    React.useEffect(() => {
+        const onDataComes = (_air_pos: 0) => {
+            setAirPos(_air_pos);
+        }
+        globalClientRequestHandler.subcribe(ComponentIndex_t.MODIFY_AIR_CIRC_MANUAL, onDataComes);
+        return () => {
+            globalClientRequestHandler.unsubcribe(ComponentIndex_t.MODIFY_AIR_CIRC_MANUAL);
+        }
+    }, []);
+
+    const airPosOption = Array.from({length:2}, (_, i) => i);
+    const airPosName = ["CABIN", "OUTSIDE"];
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        globalClientRequestHandler.handleRequest(
+            ComponentIndex_t.MODIFY_AIR_CIRC_MANUAL,
+            air_pos
+        )
+    };
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <h4>AIR CIRCULATION MANUAL</h4>
+                <div style={{display: 'flex', gap: '20px'}}>
+                    <div>
+                        <div><label>AIR CIRC OPT</label></div>
+                        <select
+                            id='air-circ-select'
+                            name='air-circ'
+                            value={air_pos.toString()}
+                            onChange={(e) => setAirPos(Number(e.target.value))}
+                        >
+                            {airPosOption.map((air_pos_val) => (
+                                <option key={air_pos_val} value={air_pos_val}>
+                                    {airPosName[air_pos_val]} | {air_pos_val}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button style={{marginTop: '6px'}} type='submit'>SEND</button>
+        </form>
+    )
+}
+
+export function AirDistributionZL() {
+    const [air_distr, setAirPos] = React.useState<number>(1);
+
+    React.useEffect(() => {
+        const onDataComes = (_air_distr: 0) => {
+            setAirPos(_air_distr);
+        }
+        globalClientRequestHandler.subcribe(ComponentIndex_t.MODIFY_AIR_DIST_ZL, onDataComes);
+        return () => {
+            globalClientRequestHandler.unsubcribe(ComponentIndex_t.MODIFY_AIR_DIST_ZL);
+        }
+    }, []);
+
+    const airDistrOpt = Array.from({length:3}, (_, i) => i + 1);
+    const airDistrName = ["UP", "BODY", "FOOTWELL"];
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        globalClientRequestHandler.handleRequest(
+            ComponentIndex_t.MODIFY_AIR_DIST_ZL,
+            air_distr
+        )
+    };
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <h4>AIR DISTRIBUTION ZONE LEFT</h4>
+                <div style={{display: 'flex', gap: '20px'}}>
+                    <div>
+                        <div><label>AIR CIRC OPT</label></div>
+                        <select
+                            id='air-distribution-zl-select'
+                            name='air-distribution-zl'
+                            value={air_distr.toString()}
+                            onChange={(e) => setAirPos(Number(e.target.value))}
+                        >
+                            {airDistrOpt.map((air_distr_val) => (
+                                <option key={air_distr_val} value={air_distr_val}>
+                                    {airDistrName[air_distr_val-1]} | {air_distr_val}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button style={{marginTop: '6px'}} type='submit'>SEND</button>
+        </form>
+    )
+}
+
+export function AirDistributionZR() {
+    const [air_distr, setAirPos] = React.useState<number>(1);
+
+    React.useEffect(() => {
+        const onDataComes = (_air_distr: 0) => {
+            setAirPos(_air_distr);
+        }
+        globalClientRequestHandler.subcribe(ComponentIndex_t.MODIFY_AIR_DIST_ZR, onDataComes);
+        return () => {
+            globalClientRequestHandler.unsubcribe(ComponentIndex_t.MODIFY_AIR_DIST_ZR);
+        }
+    }, []);
+
+    const airDistrOpt = Array.from({length:3}, (_, i) => i + 1);
+    const airDistrName = ["UP", "BODY", "FOOTWELL"];
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        globalClientRequestHandler.handleRequest(
+            ComponentIndex_t.MODIFY_AIR_DIST_ZR,
+            air_distr
+        )
+    };
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <h4>AIR DISTRIBUTION ZONE RIGHT</h4>
+                <div style={{display: 'flex', gap: '20px'}}>
+                    <div>
+                        <div><label>AIR CIRC OPT</label></div>
+                        <select
+                            id='air-distribution-zr-select'
+                            name='air-distribution-zr'
+                            value={air_distr.toString()}
+                            onChange={(e) => setAirPos(Number(e.target.value))}
+                        >
+                            {airDistrOpt.map((air_distr_val) => (
+                                <option key={air_distr_val} value={air_distr_val}>
+                                    {airDistrName[air_distr_val-1]} | {air_distr_val}
+                                </option>
                             ))}
                         </select>
                     </div>
@@ -805,17 +1081,66 @@ if (container) {
 
 export function AppView() {
     return (
-        <div>
-            <HealthCheck />
-            <HvacPowerStatus />
-            <AcCompressorForm />
-            <AcCompressorEcoMaxForm />
-            <TemperatureZL />
-            <TemperatureZR />
-            <FanSpeedZL />
-            <FanSpeedZR />
-            <SeatClimateZL />
-            <SeatClimateZR />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', padding: '20px' }}>
+            
+            <div style={{ ...cardRowStyle, justifyContent: 'center'}}>
+                <HealthCheck />
+            </div>
+
+            <div style={cardRowStyle}>
+                <HvacPowerStatus />
+                <div style={dividerStyle} />
+                <AcCompressorForm />
+                <div style={dividerStyle} />
+                <AcCompressorEcoMaxForm />
+            </div>
+
+            <div style={cardRowStyle}>
+                <TemperatureZL />
+                <div style={dividerStyle} />
+                <TemperatureZR />
+            </div>
+
+            <div style={cardRowStyle}>
+                <FanSpeedZL />
+                <div style={dividerStyle} />
+                <FanSpeedZR />
+                <div style={dividerStyle} />
+                <TirePressure />
+            </div>
+
+            <div style={cardRowStyle}>
+                <SeatClimateZL />
+                <div style={dividerStyle} />
+                <SeatClimateZR />
+                <div style={dividerStyle} />
+                <AirCirculationManual />
+            </div>
+
+            <div style={cardRowStyle}>
+                <AirDistributionZL />
+                <div style={dividerStyle} />
+                <AirDistributionZR />
+            </div>
+
         </div>
     );
 }
+
+const cardRowStyle: React.CSSProperties = {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: '30px',
+    padding: '20px',
+    border: '1px solid #ccc',
+    borderRadius: '8px',
+    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+    alignItems: 'flex-start'
+};
+
+const dividerStyle: React.CSSProperties = {
+    width: '1px',
+    backgroundColor: '#ccc',
+    alignSelf: 'stretch',
+    margin: '0 10px'
+};

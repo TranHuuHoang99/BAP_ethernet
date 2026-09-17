@@ -416,6 +416,22 @@ void BapParser::encode_rvc(const bool status)
     (void)status;
 }
 
+void BapParser::encode_tire_pressure(const int32_t unit,
+                                     const float32_t value_fl,
+                                     const float32_t value_fr,
+                                     const float32_t value_rl,
+                                     const float32_t value_rr)
+{
+    std::cout << "encode tire pressure, unit "
+              << unit
+              << ", value fl " << value_fl
+              << ", value fr " << value_fr
+              << ", value rl " << value_rl
+              << ", value rr " << value_rr
+              << '\n';
+
+}
+
 void BapParser::encode_seat_climate_zl(const int32_t heat_val,
                                        const int32_t heat_state,
                                        const int32_t ventilation_val,
