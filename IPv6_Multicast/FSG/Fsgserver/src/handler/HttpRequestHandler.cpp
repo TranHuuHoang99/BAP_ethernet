@@ -78,6 +78,8 @@ void HttpRequestHandler::start(void)
             bool isValid = true;
             bool hasExtractedType = false;
 
+            std::cout << "[HTTP] On receive message from GET/POST\n";
+
             while (true) {
                 DWORD bytesRead = 0;
                 ResetEvent(olRead.hEvent);

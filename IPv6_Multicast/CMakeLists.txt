@@ -119,3 +119,13 @@ target_include_directories(
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17 c_std_11)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION bin/)
+
+set(NODE_JS_EXE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../runtime_fsg_simulation/simulation_executable_file")
+
+add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${NODE_JS_EXE_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> "${NODE_JS_EXE_DIR}/"
+    COMMENT "Copying compiled binary to Node.js simulation folder..."
+)

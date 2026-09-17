@@ -3,14 +3,43 @@ import { createRoot } from 'react-dom/client';
 import { ComponentIndex_t, HELLO_WORLD_GET_TYPE } from '../../common/request_api.js';
 import { globalClientRequestHandler } from './ClientRequestHandler.js';
 
-export function AppView() {
+export function HealthCheck() {
+    const [isRunning, setBinaryState] = React.useState<boolean>(false);
+    React.useEffect(() => {
+        const onDataComes = (isAlive: boolean) => {
+            setBinaryState(isAlive);
+        }
+        globalClientRequestHandler.subcribe(ComponentIndex_t.HEALTH_CHECK_FSG_RUNNING, onDataComes);
+        return () => {
+            globalClientRequestHandler.unsubcribe(ComponentIndex_t.HEALTH_CHECK_FSG_RUNNING);
+        }
+    }, []);
+    const toggleExecuteBin = () => {
+        globalClientRequestHandler.handleRequest(ComponentIndex_t.HEALTH_CHECK_FSG_RUNNING, !isRunning);
+    };
+    const buttonText = isRunning ? "ON" : "OFF";
+    const buttonColor = isRunning ? "#4CAF50" : "#ffffff";
     return (
-        <div>
-            <HvacPowerStatus />
-            <AcCompressorForm />
-            <AcCompressorEcoMaxForm />
-            <TemperatureZL />
-            <TemperatureZR />
+        <div style={{ fontFamily: 'Arial, sans-serif' }}>
+            <h4>HEALTH CHECK</h4>
+            <div>
+                <div>
+                    <label style={{ color: isRunning ? "#4CAF50" : "#F44336",
+                                    fontWeight: 'bold' }}
+                    >
+                        {isRunning ? "System is Running" : "System is Stopped"}
+                    </label>
+                </div>
+                <button
+                    onClick={toggleExecuteBin}
+                    style={{
+                        backgroundColor: buttonColor,
+                        marginTop: '6px'
+                    }}
+                >
+                    {buttonText}
+                </button>
+            </div>
         </div>
     );
 }
@@ -400,6 +429,370 @@ export function TemperatureZR() {
     )
 }
 
+export function FanSpeedZL() {
+    const [speed, setSpeed] = React.useState<number>(0);
+    const [modState, setModState] = React.useState<boolean>(false);
+    const [modReason, setModReason] = React.useState<number>(0);
+
+    React.useEffect(() => {
+        const onDataComes = (_speed: number,
+                             _modState: boolean,
+                             _modReason: number) =>
+        {
+            setSpeed(_speed);
+            setModState(_modState);
+            setModReason(_modReason);
+        }
+        globalClientRequestHandler.subcribe(ComponentIndex_t.MODIFY_HVAC_FAN_SPEED_ZL, onDataComes);
+        return () => {
+            globalClientRequestHandler.unsubcribe(ComponentIndex_t.MODIFY_HVAC_FAN_SPEED_ZL);
+        }
+    }, []);
+
+    const modReasonOption = Array.from({length:13}, (_, i) => i);
+    const speedOption = Array.from({length:10}, (_, i) => i);
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        globalClientRequestHandler.handleRequest(
+            ComponentIndex_t.MODIFY_HVAC_FAN_SPEED_ZL,
+            speed,
+            modState,
+            modReason
+        )
+    };
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <h4>FAN SPEED ZONE LEFT</h4>
+                <div style={{display: 'flex', gap: '20px'}}>
+                    <div>
+                        <div><label>SPEED</label></div>
+                        <select
+                            id='speed-left-select'
+                            name='speed-left'
+                            value={speed.toString()}
+                            onChange={(e) => setSpeed(Number(e.target.value))}
+                        >
+                            {speedOption.map((speed_val) => (
+                                <option key={speed_val} value={speed_val}>{speed_val}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>MODIFICATION STATE</label></div>
+                        <select
+                            id='speed-left-mod-state-select'
+                            name='speed-left-mod-state'
+                            value={modState.toString()}
+                            onChange={(e) => setModState(e.target.value === 'true')}
+                        >
+                            <option value={"false"}>CAN NOT BE CHANGED</option>
+                            <option value={"true"}>CAN BE CHANGED</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>MODIFICATION REASON</label></div>
+                        <select
+                            id='speed-left-mod-reason-select'
+                            name='speed-left-mod-reason'
+                            value={modReason.toString()}
+                            onChange={(e) => setModReason(Number(e.target.value))}
+                        >
+                            {modReasonOption.map((numb) => (
+                                <option key={numb} value={numb}>{numb}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button style={{marginTop: '6px'}} type='submit'>SEND</button>
+        </form>
+    )
+}
+
+export function FanSpeedZR() {
+    const [speed, setSpeed] = React.useState<number>(0);
+    const [modState, setModState] = React.useState<boolean>(false);
+    const [modReason, setModReason] = React.useState<number>(0);
+
+    React.useEffect(() => {
+        const onDataComes = (_speed: number,
+                             _modState: boolean,
+                             _modReason: number) =>
+        {
+            setSpeed(_speed);
+            setModState(_modState);
+            setModReason(_modReason);
+        }
+        globalClientRequestHandler.subcribe(ComponentIndex_t.MODIFY_HVAC_FAN_SPEED_ZR, onDataComes);
+        return () => {
+            globalClientRequestHandler.unsubcribe(ComponentIndex_t.MODIFY_HVAC_FAN_SPEED_ZR);
+        }
+    }, []);
+
+    const modReasonOption = Array.from({length:13}, (_, i) => i);
+    const speedOption = Array.from({length:10}, (_, i) => i);
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        globalClientRequestHandler.handleRequest(
+            ComponentIndex_t.MODIFY_HVAC_FAN_SPEED_ZR,
+            speed,
+            modState,
+            modReason
+        )
+    };
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <h4>FAN SPEED ZONE RIGHT</h4>
+                <div style={{display: 'flex', gap: '20px'}}>
+                    <div>
+                        <div><label>SPEED</label></div>
+                        <select
+                            id='speed-right-select'
+                            name='speed-right'
+                            value={speed.toString()}
+                            onChange={(e) => setSpeed(Number(e.target.value))}
+                        >
+                            {speedOption.map((speed_val) => (
+                                <option key={speed_val} value={speed_val}>{speed_val}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>MODIFICATION STATE</label></div>
+                        <select
+                            id='speed-right-mod-state-select'
+                            name='speed-right-mod-state'
+                            value={modState.toString()}
+                            onChange={(e) => setModState(e.target.value === 'true')}
+                        >
+                            <option value={"false"}>CAN NOT BE CHANGED</option>
+                            <option value={"true"}>CAN BE CHANGED</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>MODIFICATION REASON</label></div>
+                        <select
+                            id='speed-right-mod-reason-select'
+                            name='speed-right-mod-reason'
+                            value={modReason.toString()}
+                            onChange={(e) => setModReason(Number(e.target.value))}
+                        >
+                            {modReasonOption.map((numb) => (
+                                <option key={numb} value={numb}>{numb}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button style={{marginTop: '6px'}} type='submit'>SEND</button>
+        </form>
+    )
+}
+
+export function SeatClimateZL() {
+    const [heat_val, setHeatVal] = React.useState<number>(0);
+    const [heat_state, setHeatState] = React.useState<number>(0);
+    const [ven_val, setVenVal] = React.useState<number>(0);
+    const [ven_state, setVenState] = React.useState<number>(0);
+
+    React.useEffect(() => {
+        const onDataComes = (_heat_val: number,
+                             _heat_state: number,
+                             _ven_val: number,
+                             _ven_state: number) =>
+        {
+            setHeatVal(_heat_val);
+            setHeatState(_heat_state);
+            setVenVal(_ven_val);
+            setVenState(_ven_state);
+        }
+        globalClientRequestHandler.subcribe(ComponentIndex_t.MODIFY_SEAT_CLIMATE_ZL, onDataComes);
+        return () => {
+            globalClientRequestHandler.unsubcribe(ComponentIndex_t.MODIFY_SEAT_CLIMATE_ZL);
+        }
+    }, []);
+
+    const heatValOption = Array.from({length:4}, (_, i) => i);
+    const heatStateOption = Array.from({length:3}, (_, i) => i);
+    const venValOption = Array.from({length:4}, (_, i) => i);
+    const venStateOption = Array.from({length:3}, (_, i) => i);
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        globalClientRequestHandler.handleRequest(
+            ComponentIndex_t.MODIFY_SEAT_CLIMATE_ZL,
+            heat_val,
+            heat_state,
+            ven_val,
+            ven_state
+        )
+    };
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <h4>SEAT CLIMATE ZONE LEFT</h4>
+                <div style={{display: 'flex', gap: '20px'}}>
+                    <div>
+                        <div><label>HEAT VAL</label></div>
+                        <select
+                            id='heat-val-left-select'
+                            name='heat-val-left'
+                            value={heat_val.toString()}
+                            onChange={(e) => setHeatVal(Number(e.target.value))}
+                        >
+                            {heatValOption.map((heat_val) => (
+                                <option key={heat_val} value={heat_val}>{heat_val}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>HEAT STATE</label></div>
+                        <select
+                            id='heat-state-left-select'
+                            name='heat-state-left'
+                            value={heat_state.toString()}
+                            onChange={(e) => setHeatState(Number(e.target.value))}
+                        >
+                            {heatStateOption.map((heat_state) => (
+                                <option key={heat_state} value={heat_state}>{heat_state}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>VENTILATION VAL</label></div>
+                        <select
+                            id='ven-val-left-select'
+                            name='ven-val-left'
+                            value={ven_val.toString()}
+                            onChange={(e) => setVenVal(Number(e.target.value))}
+                        >
+                            {venValOption.map((ven_val_t) => (
+                                <option key={ven_val_t} value={ven_val_t}>{ven_val_t}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>VENTILATION STATE</label></div>
+                        <select
+                            id='ven-state-left-select'
+                            name='ven-state-left'
+                            value={ven_state.toString()}
+                            onChange={(e) => setHeatState(Number(e.target.value))}
+                        >
+                            {venStateOption.map((ven_state_t) => (
+                                <option key={ven_state_t} value={ven_state_t}>{ven_state_t}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button style={{marginTop: '6px'}} type='submit'>SEND</button>
+        </form>
+    )
+}
+
+export function SeatClimateZR() {
+    const [heat_val, setHeatVal] = React.useState<number>(0);
+    const [heat_state, setHeatState] = React.useState<number>(0);
+    const [ven_val, setVenVal] = React.useState<number>(0);
+    const [ven_state, setVenState] = React.useState<number>(0);
+
+    React.useEffect(() => {
+        const onDataComes = (_heat_val: number,
+                             _heat_state: number,
+                             _ven_val: number,
+                             _ven_state: number) =>
+        {
+            setHeatVal(_heat_val);
+            setHeatState(_heat_state);
+            setVenVal(_ven_val);
+            setVenState(_ven_state);
+        }
+        globalClientRequestHandler.subcribe(ComponentIndex_t.MODIFY_SEAT_CLIMATE_ZR, onDataComes);
+        return () => {
+            globalClientRequestHandler.unsubcribe(ComponentIndex_t.MODIFY_SEAT_CLIMATE_ZR);
+        }
+    }, []);
+
+    const heatValOption = Array.from({length:4}, (_, i) => i);
+    const heatStateOption = Array.from({length:3}, (_, i) => i);
+    const venValOption = Array.from({length:4}, (_, i) => i);
+    const venStateOption = Array.from({length:3}, (_, i) => i);
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        globalClientRequestHandler.handleRequest(
+            ComponentIndex_t.MODIFY_SEAT_CLIMATE_ZR,
+            heat_val,
+            heat_state,
+            ven_val,
+            ven_state
+        )
+    };
+    return (
+        <form onSubmit={handleSubmit}>
+            <div>
+                <h4>SEAT CLIMATE ZONE RIGHT</h4>
+                <div style={{display: 'flex', gap: '20px'}}>
+                    <div>
+                        <div><label>HEAT VAL</label></div>
+                        <select
+                            id='heat-val-right-select'
+                            name='heat-val-right'
+                            value={heat_val.toString()}
+                            onChange={(e) => setHeatVal(Number(e.target.value))}
+                        >
+                            {heatValOption.map((heat_val) => (
+                                <option key={heat_val} value={heat_val}>{heat_val}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>HEAT STATE</label></div>
+                        <select
+                            id='heat-state-right-select'
+                            name='heat-state-right'
+                            value={heat_state.toString()}
+                            onChange={(e) => setHeatState(Number(e.target.value))}
+                        >
+                            {heatStateOption.map((heat_state) => (
+                                <option key={heat_state} value={heat_state}>{heat_state}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>VENTILATION VAL</label></div>
+                        <select
+                            id='ven-val-right-select'
+                            name='ven-val-right'
+                            value={ven_val.toString()}
+                            onChange={(e) => setVenVal(Number(e.target.value))}
+                        >
+                            {venValOption.map((ven_val_t) => (
+                                <option key={ven_val_t} value={ven_val_t}>{ven_val_t}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div>
+                        <div><label>VENTILATION STATE</label></div>
+                        <select
+                            id='ven-state-right-select'
+                            name='ven-state-right'
+                            value={ven_state.toString()}
+                            onChange={(e) => setHeatState(Number(e.target.value))}
+                        >
+                            {venStateOption.map((ven_state_t) => (
+                                <option key={ven_state_t} value={ven_state_t}>{ven_state_t}</option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <button style={{marginTop: '6px'}} type='submit'>SEND</button>
+        </form>
+    )
+}
+
 const container = document.getElementById('root');
 if (container) {
     const root = createRoot(container);
@@ -408,4 +801,21 @@ if (container) {
             <AppView />
         </React.StrictMode>
     )
+}
+
+export function AppView() {
+    return (
+        <div>
+            <HealthCheck />
+            <HvacPowerStatus />
+            <AcCompressorForm />
+            <AcCompressorEcoMaxForm />
+            <TemperatureZL />
+            <TemperatureZR />
+            <FanSpeedZL />
+            <FanSpeedZR />
+            <SeatClimateZL />
+            <SeatClimateZR />
+        </div>
+    );
 }

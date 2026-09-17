@@ -3,10 +3,21 @@
 
 #include "FsgType.hpp"
 
+using std::_Placeholder;
+
 class BapParser {
 private:
     struct BapParserToken {
         explicit BapParserToken(void) = default;
+    };
+
+    std::map<std::pair<lsgId_t, fctId_t>, std::any> m_distributedFunc_map = {
+        {
+            {lsgId_t::BapLsg_ClimateZone, fctId_t::BapFct_ClimateZone_FSG_Control}, 
+            std::function<void(uint8_t)>([&](uint8_t status) {
+                this->decode_hvac_power(status);
+            })
+        },
     };
 public:
     BapParser(BapParser::BapParserToken) {}

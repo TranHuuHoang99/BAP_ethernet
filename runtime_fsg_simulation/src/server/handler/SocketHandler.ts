@@ -34,8 +34,12 @@ export class SocketHandler {
         this.m_wss.close();
     }
 
-    public send(...payload: any[]): void {
-
+    public send(payload: string): void {
+        this.m_wss.clients.forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(payload);
+            }
+        });
     }
 }
 

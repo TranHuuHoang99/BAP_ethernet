@@ -425,6 +425,11 @@ void BapParser::encode_seat_climate_zl(const int32_t heat_val,
     http::zl_seat_climate_heat_state = heat_state;
     http::zl_seat_climate_ventilation_value = ventilation_val;
     http::zl_seat_climate_ventilation_state = ventilation_state;
+    std::cout << "seat climate zl : "
+              << ", heat val : " << heat_val
+              << ", heat state : " << heat_state
+              << ", ventilation val : " << ventilation_val
+              << ", ventilation state : " << ventilation_state << '\n';
     const std::shared_ptr<FsgIpv6> fsg = FsgIpv6::instance();
     if (fsg == nullptr) {
         std::cerr << "fsg is nullptr\n";
@@ -456,6 +461,8 @@ void BapParser::encode_seat_climate_zl(const int32_t heat_val,
         fctId_t::BapFct_ClimateZone_ZL_SeatClimate,
         {data, len}
     );
+    std::cout << "DEBUG : heat : " << static_cast<int32_t>(data[0])
+              << ", ventilation : " << static_cast<int32_t>(data[1]) << '\n';
     for (int32_t i = 0; i < (len + 6u - 1u) / 6u; i++) {
         auto it_start = data.begin() + (i * 6u);
         auto it_end = (it_start + 6u > data.end()) ? data.end() : (it_start + 6u);

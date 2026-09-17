@@ -3,7 +3,7 @@ export const HELLO_WORLD_GET_TYPE = 'GET_DATA';
 /*
     HTTP CLIENT REQUESTS
     client must send to server following rules below
-    JSON: { "targetId": "div_99", "payload": "Hello World" }
+    JSON: { "targetcId": "div_99", "payload": "Hello World" }
 */
 export enum ComponentIndex_t {
     MODIFY_HVAC_POWER_STATUS = 'MODIFY_HVAC_POWER_STATUS',
@@ -14,11 +14,14 @@ export enum ComponentIndex_t {
     MODIFY_HVAC_FAN_SPEED_ZL = 'MODIFY_HVAC_FAN_SPEED_ZL',
     MODIFY_HVAC_FAN_SPEED_ZR = 'MODIFY_HVAC_FAN_SPEED_ZR',
     MODIFY_RVC = 'MODIFY_RVC',
+    MODIFY_TIRE_PRESSURE = 'MODIFY_TIRE_PRESSURE',
     MODIFY_SEAT_CLIMATE_ZL = 'MODIFY_SEAT_CLIMATE_ZL',
     MODIFY_SEAT_CLIMATE_ZR = 'MODIFY_SEAT_CLIMATE_ZR',
     MODIFY_AIR_CIRC_MANUAL = 'MODIFY_AIR_CIRC_MANUAL',
     MODIFY_AIR_DIST_ZL = 'MODIFY_AIR_DIST_ZL',
     MODIFY_AIR_DIST_ZR = 'MODIFY_AIR_DIST_ZR',
+
+    HEALTH_CHECK_FSG_RUNNING = 'HEALTH_CHECK_FSG_RUNNING',
 }
 
 export enum HttpRequest_t {
