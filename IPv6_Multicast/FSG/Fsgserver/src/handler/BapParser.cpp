@@ -1,6 +1,7 @@
 #include "BapParser.hpp"
 #include "FsgIpv6.hpp"
 #include "FsgDefaultValue.hpp"
+#include <algorithm>
 
 std::shared_ptr<BapParser> BapParser::instance(void)
 {
@@ -429,7 +430,6 @@ void BapParser::encode_tire_pressure(const int32_t unit,
               << ", value rl " << value_rl
               << ", value rr " << value_rr
               << '\n';
-
 }
 
 void BapParser::encode_seat_climate_zl(const int32_t heat_val,
@@ -465,12 +465,12 @@ void BapParser::encode_seat_climate_zl(const int32_t heat_val,
         fctId_t::BapFct_ClimateZone_ZL_SeatClimate
     );
     uint8_t heat = 0u;
-    heat |= static_cast<uint8_t>((heat_val << 0));
-    heat |= static_cast<uint8_t>((heat_state << 4));
+    heat |= static_cast<uint8_t>(heat_val & 0x0F);
+    heat |= static_cast<uint8_t>((heat_state & 0x0F) << 4);
     data[0] = heat;
     uint8_t ventilation = 0u;
-    ventilation |= static_cast<uint8_t>((ventilation_val << 0));
-    ventilation |= static_cast<uint8_t>((ventilation_state << 4));
+    ventilation |= static_cast<uint8_t>(ventilation_val & 0x0F);
+    ventilation |= static_cast<uint8_t>((ventilation_state & 0x0F) << 4);
     data[1] = ventilation;
     (void)fsg->storeData<std::vector<uint8_t>>(
         lsgId_t::BapLsg_ClimateZone,
@@ -479,9 +479,11 @@ void BapParser::encode_seat_climate_zl(const int32_t heat_val,
     );
     std::cout << "DEBUG : heat : " << static_cast<int32_t>(data[0])
               << ", ventilation : " << static_cast<int32_t>(data[1]) << '\n';
+    std::vector<uint8_t> convertedData = data;
+    std::reverse(convertedData.begin(), convertedData.end());
     for (int32_t i = 0; i < (len + 6u - 1u) / 6u; i++) {
-        auto it_start = data.begin() + (i * 6u);
-        auto it_end = (it_start + 6u > data.end()) ? data.end() : (it_start + 6u);
+        auto it_start = convertedData.begin() + (i * 6u);
+        auto it_end = (it_start + 6u > convertedData.end()) ? convertedData.end() : (it_start + 6u);
         fsg->write_seat_climate_zl(std::vector<uint8_t>(it_start, it_end));
     }
 }
@@ -514,22 +516,26 @@ void BapParser::encode_seat_climate_zr(const int32_t heat_val,
         fctId_t::BapFct_ClimateZone_ZR_SeatClimate
     );
     uint8_t heat = 0u;
-    heat |= static_cast<uint8_t>((heat_val << 0));
-    heat |= static_cast<uint8_t>((heat_state << 4));
+    heat |= static_cast<uint8_t>(heat_val & 0x0F);
+    heat |= static_cast<uint8_t>((heat_state & 0x0F) << 4);
     data[0] = heat;
     uint8_t ventilation = 0u;
-    ventilation |= static_cast<uint8_t>((ventilation_val << 0));
-    ventilation |= static_cast<uint8_t>((ventilation_state << 4));
+    ventilation |= static_cast<uint8_t>(ventilation_val & 0x0F);
+    ventilation |= static_cast<uint8_t>((ventilation_state & 0x0F) << 4);
     data[1] = ventilation;
     (void)fsg->storeData<std::vector<uint8_t>>(
         lsgId_t::BapLsg_ClimateZone,
-        fctId_t::BapFct_ClimateZone_ZR_SeatClimate,
+        fctId_t::BapFct_ClimateZone_ZL_SeatClimate,
         {data, len}
     );
+    std::cout << "DEBUG : heat : " << static_cast<int32_t>(data[0])
+              << ", ventilation : " << static_cast<int32_t>(data[1]) << '\n';
+    std::vector<uint8_t> convertedData = data;
+    std::reverse(convertedData.begin(), convertedData.end());
     for (int32_t i = 0; i < (len + 6u - 1u) / 6u; i++) {
-        auto it_start = data.begin() + (i * 6u);
-        auto it_end = (it_start + 6u > data.end()) ? data.end() : (it_start + 6u);
-        fsg->write_seat_climate_zr(std::vector<uint8_t>(it_start, it_end));
+        auto it_start = convertedData.begin() + (i * 6u);
+        auto it_end = (it_start + 6u > convertedData.end()) ? convertedData.end() : (it_start + 6u);
+        fsg->write_seat_climate_zl(std::vector<uint8_t>(it_start, it_end));
     }
 }
 

@@ -626,7 +626,7 @@ export function TirePressure() {
 
     let unitOption = Array.from({length:3}, (_, i) => i);
     const valBAR = Array.from({length:64}, (_, i) => Number(i * 0.1).toFixed(1));
-    const valPSI = Array.from({length:64}, (_, i) => i * 1.0);
+    const valPSI = Array.from({length:101}, (_, i) => i * 1.0);
     const valKPA = Array.from({length:64}, (_, i) => i * 10.0);
     const curValOption = unit === 0 ? valBAR : unit === 1 ? valPSI : valKPA;
     const unitNames = ["BAR", "PSI", "KPA"];
@@ -922,7 +922,6 @@ export function SeatClimateZR() {
     )
 }
 
-<<<<<<< Updated upstream
 export function AirCirculationManual() {
     const [air_pos, setAirPos] = React.useState<number>(0);
 
@@ -943,49 +942,11 @@ export function AirCirculationManual() {
         globalClientRequestHandler.handleRequest(
             ComponentIndex_t.MODIFY_AIR_CIRC_MANUAL,
             air_pos
-=======
-export function TirePressure() {
-    const [heat_val, setHeatVal] = React.useState<number>(0);
-    const [heat_state, setHeatState] = React.useState<number>(0);
-    const [ven_val, setVenVal] = React.useState<number>(0);
-    const [ven_state, setVenState] = React.useState<number>(0);
-
-    React.useEffect(() => {
-        const onDataComes = (_heat_val: number,
-                             _heat_state: number,
-                             _ven_val: number,
-                             _ven_state: number) =>
-        {
-            setHeatVal(_heat_val);
-            setHeatState(_heat_state);
-            setVenVal(_ven_val);
-            setVenState(_ven_state);
-        }
-        globalClientRequestHandler.subcribe(ComponentIndex_t.MODIFY_SEAT_CLIMATE_ZR, onDataComes);
-        return () => {
-            globalClientRequestHandler.unsubcribe(ComponentIndex_t.MODIFY_SEAT_CLIMATE_ZR);
-        }
-    }, []);
-
-    const heatValOption = Array.from({length:4}, (_, i) => i);
-    const heatStateOption = Array.from({length:3}, (_, i) => i);
-    const venValOption = Array.from({length:4}, (_, i) => i);
-    const venStateOption = Array.from({length:3}, (_, i) => i);
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        globalClientRequestHandler.handleRequest(
-            ComponentIndex_t.MODIFY_SEAT_CLIMATE_ZR,
-            heat_val,
-            heat_state,
-            ven_val,
-            ven_state
->>>>>>> Stashed changes
         )
     };
     return (
         <form onSubmit={handleSubmit}>
             <div>
-<<<<<<< Updated upstream
                 <h4>AIR CIRCULATION MANUAL</h4>
                 <div style={{display: 'flex', gap: '20px'}}>
                     <div>
@@ -1098,59 +1059,6 @@ export function AirDistributionZR() {
                                 <option key={air_distr_val} value={air_distr_val}>
                                     {airDistrName[air_distr_val-1]} | {air_distr_val}
                                 </option>
-=======
-                <h4>SEAT CLIMATE ZONE RIGHT</h4>
-                <div style={{display: 'flex', gap: '20px'}}>
-                    <div>
-                        <div><label>HEAT VAL</label></div>
-                        <select
-                            id='heat-val-right-select'
-                            name='heat-val-right'
-                            value={heat_val.toString()}
-                            onChange={(e) => setHeatVal(Number(e.target.value))}
-                        >
-                            {heatValOption.map((heat_val) => (
-                                <option key={heat_val} value={heat_val}>{heat_val}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <div><label>HEAT STATE</label></div>
-                        <select
-                            id='heat-state-right-select'
-                            name='heat-state-right'
-                            value={heat_state.toString()}
-                            onChange={(e) => setHeatState(Number(e.target.value))}
-                        >
-                            {heatStateOption.map((heat_state) => (
-                                <option key={heat_state} value={heat_state}>{heat_state}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <div><label>VENTILATION VAL</label></div>
-                        <select
-                            id='ven-val-right-select'
-                            name='ven-val-right'
-                            value={ven_val.toString()}
-                            onChange={(e) => setVenVal(Number(e.target.value))}
-                        >
-                            {venValOption.map((ven_val_t) => (
-                                <option key={ven_val_t} value={ven_val_t}>{ven_val_t}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <div><label>VENTILATION STATE</label></div>
-                        <select
-                            id='ven-state-right-select'
-                            name='ven-state-right'
-                            value={ven_state.toString()}
-                            onChange={(e) => setHeatState(Number(e.target.value))}
-                        >
-                            {venStateOption.map((ven_state_t) => (
-                                <option key={ven_state_t} value={ven_state_t}>{ven_state_t}</option>
->>>>>>> Stashed changes
                             ))}
                         </select>
                     </div>
