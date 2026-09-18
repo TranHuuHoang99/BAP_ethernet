@@ -53,40 +53,52 @@ export function HealthCheck() {
 }
 
 export function HvacPowerStatus() {
-    const [isHvacOn, setHvacState] = React.useState<boolean>(false);
+    const [hvacPower, sethvacPower] = React.useState<number>(0);
+
     React.useEffect(() => {
-        const onDataComes = (hvacStatus: boolean) => {
-            console.log("do change hvac status on UI");
-            setHvacState(hvacStatus);
+        const onDataComes = (_hvacPower: number) => {
+            sethvacPower(_hvacPower);
         }
         globalClientRequestHandler.subcribe(ComponentIndex_t.MODIFY_HVAC_POWER_STATUS, onDataComes);
         return () => {
             globalClientRequestHandler.unsubcribe(ComponentIndex_t.MODIFY_HVAC_POWER_STATUS);
-        };
+        }
     }, []);
-    const toggleHvacPower = () => {
-        globalClientRequestHandler.handleRequest(ComponentIndex_t.MODIFY_HVAC_POWER_STATUS, !isHvacOn);
-    };
 
-    const buttonText = isHvacOn ? "ON" : "OFF";
-    const buttonColor = isHvacOn ? "#4CAF50" : "#ffffff";
+    const hvacPowerName = ["OFF", "ON"];    
+    const hvacPowerOption = Array.from({length:2}, (_, i) => i);
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        globalClientRequestHandler.handleRequest(
+            ComponentIndex_t.MODIFY_HVAC_POWER_STATUS,
+            hvacPower
+        )
+    };
     return (
-        <div style={{ fontFamily: 'Arial, sans-serif' }}>
-            <h4>HVAC POWER</h4>
+        <form onSubmit={handleSubmit}>
             <div>
-                <div><label>status</label></div>
-                <button
-                    onClick={toggleHvacPower}
-                    style={{
-                        backgroundColor: buttonColor,
-                        marginTop: '6px'
-                    }}
-                >
-                    {buttonText}
-                </button>
+                <h4>HVAC POWER STATUS</h4>
+                <div style={{display: 'flex', gap: '20px'}}>
+                    <div>
+                        <div><label>POWER</label></div>
+                        <select
+                            id='hvac-power-select'
+                            name='hvac-power'
+                            value={hvacPower.toString()}
+                            onChange={(e) => sethvacPower(Number(e.target.value))}
+                        >
+                            {hvacPowerOption.map((power_val) => (
+                                <option key={power_val} value={power_val}>
+                                    {hvacPowerName[power_val]}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                </div>
             </div>
-        </div>
-    );
+            <button style={{marginTop: '6px'}} type='submit'>SEND</button>
+        </form>
+    )
 }
 
 export function AcCompressorForm() {

@@ -40,6 +40,9 @@ class FsgSimulationManager {
 
     public handleHttpRequest(request_t: any, payload: any[]): void
     {
+        for (let i = 0; i < payload.length - 1; i += 2) {
+            [payload[i], payload[i + 1]] = [payload[i + 1], payload[i]];
+        }
         switch (request_t) {
             case ComponentIndex_t.MODIFY_HVAC_POWER_STATUS:
             {
