@@ -67,7 +67,11 @@ void FsgIpv6::indicationInt8(const lsgId_t aLsgId,
                              const enum BapIndication_t aeIndication,
                              const uint8_t au8Value)
 {
-
+    if (BapIndication_t::BapInd_DataSetGet == aeIndication) {
+        BAP_RequestInt8(aLsgId, aFctId, 
+                        BapRequest_t::BapReq_Data,
+                        au8Value);
+    }
 }
 
 void FsgIpv6::indicationInt16(const lsgId_t aLsgId,
@@ -101,6 +105,11 @@ void FsgIpv6::indicationByteSequence(const lsgId_t aLsgId,
                   << (int32_t)(apValue[i]) << " ";
     }
     std::cout << '\n';
+    if (BapIndication_t::BapInd_DataSetGet == aeIndication) {
+        BAP_RequestByteSequence(aLsgId, aFctId, 
+                                BapRequest_t::BapReq_Data,
+                                (bap_uint8_t*)&apValue[0], au32Length);
+    }
 }
 
 void FsgIpv6::indicationError(const lsgId_t aLsgId,
