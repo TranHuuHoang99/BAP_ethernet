@@ -355,7 +355,7 @@ class FsgSimulationManager {
     {
         const payload = new Uint8Array(2);
         payload[0] = HttpRequest_t.MODIFY_AIR_DIST_ZL;
-        payload[1] = val
+        payload[1] = val;
         console.log("air distribution zl : ", payload);
         this.m_simulationHandler.executeRequest(payload);
     }
@@ -364,7 +364,7 @@ class FsgSimulationManager {
     {
         const payload = new Uint8Array(2);
         payload[0] = HttpRequest_t.MODIFY_AIR_DIST_ZR;
-        payload[1] = val
+        payload[1] = val;
         console.log("air distribution zr : ", payload);
         this.m_simulationHandler.executeRequest(payload);
     }
